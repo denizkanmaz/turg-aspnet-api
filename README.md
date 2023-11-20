@@ -1,11 +1,24 @@
-# turg-aspnet-api
+# Turg App
 
-## Where is the code?
+Web Api service for our e-commerce startup, Turg. This service involves Products and Customer Shopping Carts.
 
-The codes are in the other branches.
+## Setting up on dev env
 
-The codes are organized into Git branches based on the course section to ease travelling between the state of the application, c.
+1. Spin up a new Postgres instance.
 
-## Instructor
+```sh
+docker run --name postgres-turg -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres:16.0-alpine3.18
+```
 
-Deniz Kanmaz
+2. Execute the sql script in `init.sql`.
+
+3. Run the application.
+
+```sh
+dotnet run
+```
+
+## Misc
+
+"Turg" means "market" in Estonian language 🇪🇪
+
