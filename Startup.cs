@@ -10,7 +10,6 @@ namespace Turg.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(MvcOptions => MvcOptions.EnableEndpointRouting = false);
-            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
