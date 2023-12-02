@@ -1,6 +1,6 @@
 # Turg App
 
-Web Api service for our e-commerce startup, Turg. This service involves Products and Customer Shopping Carts.
+Web Api service for our e-commerce startup, Turg. This service involves Users, Products and Customer Shopping Carts.
 
 ## Setting up on dev env
 

@@ -6,7 +6,8 @@ namespace Turg.App
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("MyProgram.cs - Current process id is {0}", Process.GetCurrentProcess().Id);
+            Console.WriteLine("::Program:: Main - Current process id is {0}", Process.GetCurrentProcess().Id);
+            
             CreateWebHostBuilder(args)
             .Build()
             .Run();
