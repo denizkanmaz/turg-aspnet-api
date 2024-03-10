@@ -7,17 +7,12 @@ namespace Turg.App
         public static void Main(string[] args)
         {
             Console.WriteLine("::Program:: Main - Current process id is {0}", Process.GetCurrentProcess().Id);
-            
-            CreateWebHostBuilder(args)
-            .Build()
-            .Run();
-        }
 
-        public static IHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(
-                    webBuilder => { webBuilder.UseStartup<Startup>(); });
+                    webBuilder => { webBuilder.UseStartup<Startup>(); })
+             .Build()
+             .Run();
         }
     }
 }
