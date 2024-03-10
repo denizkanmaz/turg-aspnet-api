@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "f90bd332-d58b-45f6-86c1-7f909dd8cd3f",
+		"name": "Turg API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2918886"
+	},
+	"item": [
+		{
+			"name": "/products",
+			"item": [
+				{
+					"name": "/products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5276/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5276",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/GetProductsByCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5276/products/GetProductsByCategory?category=Outdoors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5276",
+							"path": [
+								"products",
+								"GetProductsByCategory"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "Outdoors"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/AddProduct",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"A sample product\",\n    \"category\": \"Sample\",\n    \"description\": \"A sample product description\",\n    \"price\": 100.00,\n    \"currency\": \"USD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5276/products/AddProduct",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5276",
+							"path": [
+								"products",
+								"AddProduct"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/UpdateProduct",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"8b2aedf0-c6a8-4a09-a36a-077055a37133\",\n    \"name\": \"Handcrafted Steel Towels (Updated)\",\n    \"category\": \"Outdoors\",\n    \"description\": \"Updated description\",\n    \"price\": 100.00,\n    \"currency\": \"USD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5276/products/UpdateProduct",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5276",
+							"path": [
+								"products",
+								"UpdateProduct"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/shoppingcarts",
+			"item": [
+				{
+					"name": "/shoppingcarts/GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5276/shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5276",
+							"path": [
+								"shoppingcarts",
+								"GetById"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/shoppingcarts/AddProduct",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shoppingCartId\": \"ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d\",\n    \"productId\": \"8b2aedf0-c6a8-4a09-a36a-077055a37133\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5276/shoppingcarts/AddProduct",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5276",
+							"path": [
+								"shoppingcarts",
+								"AddProduct"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/shoppingcarts/DeleteShoppingCart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shoppingCartId\": \"ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d\",\n    \"productId\": \"8b2aedf0-c6a8-4a09-a36a-077055a37133\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5276/shoppingcarts/Delete?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5276",
+							"path": [
+								"shoppingcarts",
+								"Delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -6,6 +6,8 @@ namespace Turg.App.Controllers
     [Route("[controller]")]
     public class ShoppingCarts : Controller
     {
+        // Returns a shopping cart by id.
+        // GET: /shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d
         [HttpGet("GetById")]
         public async Task<ShoppingCart> GetById([FromQuery] string id)
         {
@@ -51,6 +53,13 @@ namespace Turg.App.Controllers
             return shoppingCart;
         }
 
+        // Adds a shopping cart item to a shopping cart.
+        // GET: /shoppingcarts/AddProduct
+        // {
+        //     "shoppingCartId": "ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
+        //     "productId": "8b2aedf0-c6a8-4a09-a36a-077055a37133",
+        //     "quantity": 1
+        // }
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] ShoppingCartItem shoppingCartItem)
         {
@@ -70,7 +79,7 @@ namespace Turg.App.Controllers
 
             await using var conn2 = new NpgsqlConnection(Constants.ConnectionString);
             await conn2.OpenAsync();
-            var cmd2 = new NpgsqlCommand($"INSERT INTO shopping_cart_items (shopping_cart_id, product_id, quantity) VALUES ('{shoppingCartId}', '{shoppingCartItem.ProductId}', {shoppingCartItem.Quantity})", conn2);
+            var cmd2 = new NpgsqlCommand($"INSERT INTO shopping_cart_items (shopping_cart_id, product_id, quantity) VALUES ('{shoppingCartId}', '{shoppingCartItem.ProductId}', {1})", conn2);
             cmd2.ExecuteNonQuery();
             cmd2.Dispose();
             conn2.Close();
@@ -78,6 +87,8 @@ namespace Turg.App.Controllers
             return new { Result = "OK", Message = "Product added to shopping cart" };
         }
 
+        // Deletes a shopping cart and its items.
+        // GET: /shoppingcarts/Delete?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d
         [HttpGet("Delete")]
         public async void Delete([FromQuery] string id)
         {

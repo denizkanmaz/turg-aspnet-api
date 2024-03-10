@@ -6,6 +6,8 @@ namespace Turg.App.Controllers
     [Route("[controller]")]
     public class ProductsController : Controller
     {
+        // Returns all products.
+        // GET: /products/
         [HttpGet]
         public async Task<List<Product>> Index()
         {
@@ -36,6 +38,8 @@ namespace Turg.App.Controllers
             return products;
         }
 
+        // Returns products by category name.
+        // GET: /products/GetProductsByCategory?category=Outdoors
         [HttpGet("GetProductsByCategory")]
         public async Task<List<Product>> GetProductsByCategory([FromQuery] string category)
         {
@@ -66,6 +70,15 @@ namespace Turg.App.Controllers
             return products;
         }
 
+        // Adds a new product.
+        // GET: /products/AddProduct
+        // {
+        //     "name": "A sample product",
+        //     "category": "Sample",
+        //     "description": "A sample product description",
+        //     "price": 100.00,
+        //     "currency": "USD"
+        // }
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] Product product)
         {
@@ -90,6 +103,16 @@ namespace Turg.App.Controllers
             return new { Result = "OK", Message = "Product added", Id = id };
         }
 
+        // Updates a product.
+        // GET: /products/UpdateProduct
+        // {
+        //     "id": "8b2aedf0-c6a8-4a09-a36a-077055a37133",
+        //     "name": "Handcrafted Steel Towels (Updated)",
+        //     "category": "Outdoors",
+        //     "description": "Updated description",
+        //     "price": 100.00,
+        //     "currency": "USD"
+        // }
         [HttpGet("UpdateProduct")]
         public async Task<dynamic> UpdateProduct([FromBody] Product product)
         {
