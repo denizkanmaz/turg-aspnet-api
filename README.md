@@ -18,6 +18,8 @@ docker run --name postgres-turg -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpasswo
 dotnet run
 ```
 
+4. Import `Turg API.postman_collection.json` to Postman to test the application.
+
 ## Misc
 
 "Turg" means "market" in Estonian language 🇪🇪
