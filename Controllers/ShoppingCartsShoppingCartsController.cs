@@ -4,7 +4,7 @@ using Npgsql;
 namespace Turg.App.Controllers
 {
     [Route("[controller]")]
-    public class ShoppingCarts : Controller
+    public class ShoppingCartsController : Controller
     {
         // Returns a shopping cart by id.
         // GET: /shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d
