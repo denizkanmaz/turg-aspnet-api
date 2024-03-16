@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f90bd332-d58b-45f6-86c1-7f909dd8cd3f",
+		"_postman_id": "2dbac097-7454-4abd-9371-0fa44fdf48a9",
 		"name": "Turg API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2918886"
@@ -15,12 +15,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5276/products",
-							"protocol": "http",
+							"raw": "{{host}}/products",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "5276",
 							"path": [
 								"products"
 							]
@@ -34,12 +32,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5276/products/GetProductsByCategory?category=Outdoors",
-							"protocol": "http",
+							"raw": "{{host}}/products/GetProductsByCategory?category=Outdoors",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "5276",
 							"path": [
 								"products",
 								"GetProductsByCategory"
@@ -72,12 +68,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5276/products/AddProduct",
-							"protocol": "http",
+							"raw": "{{host}}/products/AddProduct",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "5276",
 							"path": [
 								"products",
 								"AddProduct"
@@ -104,12 +98,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5276/products/UpdateProduct",
-							"protocol": "http",
+							"raw": "{{host}}/products/UpdateProduct",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "5276",
 							"path": [
 								"products",
 								"UpdateProduct"
@@ -129,12 +121,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5276/shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
-							"protocol": "http",
+							"raw": "{{host}}/shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "5276",
 							"path": [
 								"shoppingcarts",
 								"GetById"
@@ -167,12 +157,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5276/shoppingcarts/AddProduct",
-							"protocol": "http",
+							"raw": "{{host}}/shoppingcarts/AddProduct",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "5276",
 							"path": [
 								"shoppingcarts",
 								"AddProduct"
@@ -199,12 +187,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5276/shoppingcarts/Delete?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
-							"protocol": "http",
+							"raw": "{{host}}/shoppingcarts/Delete?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "5276",
 							"path": [
 								"shoppingcarts",
 								"Delete"
@@ -220,6 +206,35 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:5276",
+			"type": "string"
 		}
 	]
 }
