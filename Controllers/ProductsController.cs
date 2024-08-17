@@ -136,3 +136,9 @@ namespace Turg.App.Controllers
         }
     }
 }
+
+// (GET) http://localhost:5276/messages/hello-world
+// "Hello World!"
+
+// 1. Create a new controller MessagesController
+// 2. Create a new Action Method: HttpGET
