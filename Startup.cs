@@ -19,6 +19,7 @@ namespace Turg.App
         {
             Console.WriteLine("::Startup:: Configure");
             app.UseRouting();
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }
