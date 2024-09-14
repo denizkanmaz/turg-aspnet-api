@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Turg.App.Models;
 
 namespace Turg.App.Controllers
 {

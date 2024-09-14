@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Npgsql;
 
-namespace Turg.App
+namespace Turg.App.Models
 {
     public class ShoppingCart
     {

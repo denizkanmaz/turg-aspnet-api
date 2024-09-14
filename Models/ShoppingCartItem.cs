@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Turg.App
+namespace Turg.App.Models
 {
     public class ShoppingCartItem
     {
