@@ -1,0 +1,60 @@
+@using Turg.App.Models
+@model IEnumerable<Product>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Product List | Turg</title>
+
+    <style>
+        #main-container {
+            text-align: center;
+        }
+
+        .logo-top {
+            width: 150px;
+            height: 100px;
+        }
+
+        .table-products {
+            margin: 0 auto;
+            max-width: 600px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="main-container">
+        <img class="logo-top" src="/assets/logo-turg.png" alt="Turg" />
+
+        <table class="table-products">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Category</td>
+                        <td>@product.Price @product.Currency</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <footer>
+            @* Implicit Razor Expression *@
+            <p>Copyright @DateTime.Now.Year</p>
+        </footer>
+    </div>
+</body>
+
+</html>
