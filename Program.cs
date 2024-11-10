@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Turg.App.Services;
+using Turg.App.Services.HostedServices;
 
 namespace Turg.App
 {
@@ -11,6 +13,11 @@ namespace Turg.App
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(
                     webBuilder => { webBuilder.UseStartup<Startup>(); })
+                    .ConfigureServices((services) =>
+                    {
+                        services.AddSingleton<EmailService>();
+                        services.AddHostedService<OrderNotificationBackgroundService>();
+                    })
              .Build()
              .Run();
         }
