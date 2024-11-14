@@ -15,8 +15,10 @@ namespace Turg.App
                     webBuilder => { webBuilder.UseStartup<Startup>(); })
                     .ConfigureServices((services) =>
                     {
+                        services.AddSingleton<SMSService>();
                         services.AddSingleton<EmailService>();
                         services.AddHostedService<OrderNotificationBackgroundService>();
+                        services.AddHostedService<StockNotificationBackgroundService>();
                     })
              .Build()
              .Run();
