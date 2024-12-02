@@ -9,8 +9,12 @@ namespace Turg.App
             Console.WriteLine("::Program:: Main - Current process id is {0}", Process.GetCurrentProcess().Id);
 
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(
-                    webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureWebHost(
+                    webBuilder =>
+                    {
+                        webBuilder.UseStartup<Startup>();
+                        webBuilder.UseKestrel();
+                    })
              .Build()
              .Run();
         }
