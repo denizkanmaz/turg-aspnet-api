@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Turg.App.Middlewares;
+using Turg.App.Services;
 
 namespace Turg.App
 {
@@ -13,6 +15,7 @@ namespace Turg.App
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine("::Startup:: ConfigureServices");
+            services.AddScoped<UserActivityService>();
             services.AddMvc(MvcOptions => MvcOptions.EnableEndpointRouting = false);
         }
 
@@ -20,34 +23,7 @@ namespace Turg.App
         {
             Console.WriteLine("::Startup:: Configure");
 
-            // anonymous inline delegate (middleware)
-            app.Use(async (context, next) =>
-           {
-               var stopwatch = Stopwatch.StartNew();
-
-               // Resolve from DI container
-               var logger = context.RequestServices.GetRequiredService<ILogger<Startup>>();
-
-               var request = context.Request;
-
-               logger.LogInformation("[{Timestamp}] Request: {Method} {Path} from {ClientIP}",
-               DateTime.UtcNow,
-               request.Method,
-               request.Path,
-               context.Connection.RemoteIpAddress);
-
-               // pre-processing
-               await next();
-               // post-processing
-
-               stopwatch.Stop();
-
-               logger.LogInformation("[{Timestamp}] Response: {StatusCode} in {ElapsedMilliseconds} ms",
-               DateTime.UtcNow,
-               context.Response.StatusCode,
-               stopwatch.ElapsedMilliseconds);
-           });
-
+            app.UseMiddleware<HttpLoggingMiddleware>();
             app.UseRouting();
             app.UseMvc();
         }
