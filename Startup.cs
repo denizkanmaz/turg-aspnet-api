@@ -15,6 +15,7 @@ namespace Turg.App
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine("::Startup:: ConfigureServices");
+            services.AddScoped<HttpLoggingMiddleware>();
             services.AddScoped<UserActivityService>();
             services.AddMvc(MvcOptions => MvcOptions.EnableEndpointRouting = false);
         }

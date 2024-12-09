@@ -3,32 +3,26 @@ using Turg.App.Services;
 
 namespace Turg.App.Middlewares;
 
-// conventional middleware class
-internal class HttpLoggingMiddleware
+// factory-based middleware class
+internal class HttpLoggingMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
     private readonly ILogger<HttpLoggingMiddleware> _logger;
+    private readonly UserActivityService _userActivityService;
 
-    public HttpLoggingMiddleware(RequestDelegate next, ILogger<HttpLoggingMiddleware> logger)
+    public HttpLoggingMiddleware(ILogger<HttpLoggingMiddleware> logger, UserActivityService userActivityService)
     {
-        _next = next;
         _logger = logger;
-
+        _userActivityService = userActivityService;
         _logger.LogInformation("HttpLoggingMiddleware is created at {Timestamp}", DateTime.UtcNow);
     }
 
-    // public void Invoke(HttpContext context)
-    // {
-    //     // sync logic
-    // }
-
-    public async Task InvokeAsync(HttpContext context, UserActivityService userActivityService)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         // Resolve from DI container
         // var logger = context.RequestServices.GetRequiredService<ILogger<Startup>>();
         // var userActivityService = context.RequestServices.GetRequiredService<UserActivityService>();
 
-        userActivityService.StartActivity();
+        _userActivityService.StartActivity();
 
         var stopwatch = Stopwatch.StartNew();
 
@@ -41,7 +35,7 @@ internal class HttpLoggingMiddleware
         context.Connection.RemoteIpAddress);
 
         // pre-processing
-        await _next(context);
+        await next(context);
         // post-processing
 
         stopwatch.Stop();
