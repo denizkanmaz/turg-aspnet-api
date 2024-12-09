@@ -1,18 +1,26 @@
 using System.Diagnostics;
+using Microsoft.Extensions.Options;
 using Turg.App.Services;
 
 namespace Turg.App.Middlewares;
+
+internal class HttpLoggingOptions
+{
+    public bool LogClientBrowser { get; set; } = false;
+}
 
 // factory-based middleware class
 internal class HttpLoggingMiddleware : IMiddleware
 {
     private readonly ILogger<HttpLoggingMiddleware> _logger;
     private readonly UserActivityService _userActivityService;
+    private readonly HttpLoggingOptions _options;
 
-    public HttpLoggingMiddleware(ILogger<HttpLoggingMiddleware> logger, UserActivityService userActivityService)
+    public HttpLoggingMiddleware(ILogger<HttpLoggingMiddleware> logger, UserActivityService userActivityService, IOptions<HttpLoggingOptions> options)
     {
         _logger = logger;
         _userActivityService = userActivityService;
+        _options = options.Value;
         _logger.LogInformation("HttpLoggingMiddleware is created at {Timestamp}", DateTime.UtcNow);
     }
 
@@ -28,11 +36,12 @@ internal class HttpLoggingMiddleware : IMiddleware
 
         var request = context.Request;
 
-        _logger.LogInformation("[{Timestamp}] Request: {Method} {Path} from {ClientIP}",
+        _logger.LogInformation("[{Timestamp}] Request: {Method} {Path} from {ClientIP} {ClientBrowser}",
         DateTime.UtcNow,
         request.Method,
         request.Path,
-        context.Connection.RemoteIpAddress);
+        context.Connection.RemoteIpAddress,
+        _options.LogClientBrowser ? request.Headers["User-Agent"] : string.Empty);
 
         // pre-processing
         await next(context);

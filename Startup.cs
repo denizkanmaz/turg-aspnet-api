@@ -7,14 +7,18 @@ namespace Turg.App
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env)
+        private readonly IConfiguration _configuration;
+        public Startup(IConfiguration configuration)
         {
             Console.WriteLine("::Startup:: Constructor");
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine("::Startup:: ConfigureServices");
+            // services.Configure<HttpLoggingOptions>(options => options.LogClientBrowser = true);
+            services.Configure<HttpLoggingOptions>(_configuration.GetSection("HttpLogging"));
             services.AddScoped<HttpLoggingMiddleware>();
             services.AddScoped<UserActivityService>();
             services.AddMvc(MvcOptions => MvcOptions.EnableEndpointRouting = false);
