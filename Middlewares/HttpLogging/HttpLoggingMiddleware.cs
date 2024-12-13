@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
-using Turg.App.Services;
+using Turg.App.Middlewares.HttpLogging.Services;
 
-namespace Turg.App.Middlewares;
+namespace Turg.App.Middlewares.HttpLogging;
 
 internal class HttpLoggingOptions
 {

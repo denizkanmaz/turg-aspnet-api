@@ -1,5 +1,8 @@
-namespace Turg.App.Services;
+namespace Turg.App.Middlewares.HttpLogging.Services;
 
+/// <summary>
+/// User activity service for the custom http logging middleware.
+/// </summary>
 internal class UserActivityService
 {
     private readonly ILogger<UserActivityService> _logger;

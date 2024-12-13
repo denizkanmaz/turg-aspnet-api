@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Turg.App.Middlewares;
-using Turg.App.Services;
+using Turg.App.Middlewares.HttpLogging;
 
 namespace Turg.App
 {
@@ -17,18 +15,16 @@ namespace Turg.App
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine("::Startup:: ConfigureServices");
-            // services.Configure<HttpLoggingOptions>(options => options.LogClientBrowser = true);
-            services.Configure<HttpLoggingOptions>(_configuration.GetSection("HttpLogging"));
-            services.AddScoped<HttpLoggingMiddleware>();
-            services.AddScoped<UserActivityService>();
+
             services.AddMvc(MvcOptions => MvcOptions.EnableEndpointRouting = false);
+            services.AddCustomHttpLogging(_configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             Console.WriteLine("::Startup:: Configure");
 
-            app.UseMiddleware<HttpLoggingMiddleware>();
+            app.UseCustomHttpLogging();
             app.UseRouting();
             app.UseMvc();
         }
