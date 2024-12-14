@@ -23,7 +23,14 @@ namespace Turg.App
         {
             Console.WriteLine("::Startup:: Configure");
 
+            // Trust "X-Forwarded-For" header
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+            });
+
             app.UseMiddleware<HttpLoggingMiddleware>();
+            app.UseMiddleware<BlacklistingMiddleware>();
             app.UseRouting();
             app.UseMvc();
         }
