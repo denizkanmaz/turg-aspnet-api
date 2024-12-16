@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
-using Turg.App.Middlewares.ClientMetadataParsing;
+using Turg.App.ItemStorage.ClientMetadata;
 using Turg.App.Middlewares.HttpLogging.Services;
 
 namespace Turg.App.Middlewares.HttpLogging;
@@ -37,7 +37,7 @@ internal class HttpLoggingMiddleware : IMiddleware
 
         var request = context.Request;
 
-        var clientMetadata = context.Items["ClientMetadata"] as ClientMetadata;
+        var clientMetadata = context.GetClientMetadata();
 
         _logger.LogInformation("[{Timestamp}] Request: {Method} {Path} from {ClientIP} {ClientBrowser} {IsMobile}",
         DateTime.UtcNow,

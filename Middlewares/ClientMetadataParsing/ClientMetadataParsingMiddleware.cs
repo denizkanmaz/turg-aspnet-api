@@ -1,4 +1,5 @@
 
+using Turg.App.ItemStorage.ClientMetadata;
 using UAParser;
 
 namespace Turg.App.Middlewares.ClientMetadataParsing;
@@ -19,9 +20,9 @@ internal class ClientMetadataParsingMiddleware : IMiddleware
         if (!string.IsNullOrWhiteSpace(userAgent))
         {
             var parsedUserAgent = _parser.Parse(userAgent);
-            var clientMetadata = new ClientMetadata(parsedUserAgent);
+            var clientMetadata = new ClientMetadataStorageItem(parsedUserAgent);
 
-            context.Items["ClientMetadata"] = clientMetadata;
+            context.SetClientMetadata(clientMetadata);
         }
 
         await next(context);

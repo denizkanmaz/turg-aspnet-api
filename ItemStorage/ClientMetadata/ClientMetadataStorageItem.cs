@@ -1,10 +1,10 @@
 using UAParser;
 
-namespace Turg.App.Middlewares.ClientMetadataParsing;
+namespace Turg.App.ItemStorage.ClientMetadata;
 
-internal class ClientMetadata
+internal class ClientMetadataStorageItem
 {
-    public ClientMetadata(ClientInfo clientInfo)
+    public ClientMetadataStorageItem(ClientInfo clientInfo)
     {
         Device = new Device
         {
