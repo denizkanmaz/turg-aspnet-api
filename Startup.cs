@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Turg.App.Middlewares.ClientMetadataParsing;
 using Turg.App.Middlewares.HttpLogging;
 
 namespace Turg.App
@@ -18,12 +19,14 @@ namespace Turg.App
 
             services.AddMvc(MvcOptions => MvcOptions.EnableEndpointRouting = false);
             services.AddCustomHttpLogging(_configuration);
+            services.AddClientMetadataParsing();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             Console.WriteLine("::Startup:: Configure");
 
+            app.UseClientMetadataParsing();
             app.UseCustomHttpLogging();
             app.UseRouting();
             app.UseMvc();

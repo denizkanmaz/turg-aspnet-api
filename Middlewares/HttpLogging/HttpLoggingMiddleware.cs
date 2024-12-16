@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
+using Turg.App.Middlewares.ClientMetadataParsing;
 using Turg.App.Middlewares.HttpLogging.Services;
 
 namespace Turg.App.Middlewares.HttpLogging;
@@ -36,12 +37,15 @@ internal class HttpLoggingMiddleware : IMiddleware
 
         var request = context.Request;
 
-        _logger.LogInformation("[{Timestamp}] Request: {Method} {Path} from {ClientIP} {ClientBrowser}",
+        var clientMetadata = context.Items["ClientMetadata"] as ClientMetadata;
+
+        _logger.LogInformation("[{Timestamp}] Request: {Method} {Path} from {ClientIP} {ClientBrowser} {IsMobile}",
         DateTime.UtcNow,
         request.Method,
         request.Path,
         context.Connection.RemoteIpAddress,
-        _options.LogClientBrowser ? request.Headers["User-Agent"] : string.Empty);
+        _options.LogClientBrowser ? request.Headers["User-Agent"] : string.Empty,
+        clientMetadata?.Device.IsMobile);
 
         // pre-processing
         await next(context);
