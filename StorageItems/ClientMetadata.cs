@@ -1,8 +1,8 @@
 using UAParser;
 
-namespace Turg.App.Middlewares.ClientMetadataParsing;
+namespace Turg.App.StorageItems;
 
-internal class ClientMetadata
+internal class ClientMetadata : StorageItem
 {
     public ClientMetadata(ClientInfo clientInfo)
     {

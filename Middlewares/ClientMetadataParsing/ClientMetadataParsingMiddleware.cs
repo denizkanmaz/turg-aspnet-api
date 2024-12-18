@@ -1,4 +1,6 @@
 
+using Turg.App.HttpContextExtensions.StorageItemExtensions;
+using Turg.App.StorageItems;
 using UAParser;
 
 namespace Turg.App.Middlewares.ClientMetadataParsing;
@@ -21,7 +23,7 @@ internal class ClientMetadataParsingMiddleware : IMiddleware
             var parsedUserAgent = _parser.Parse(userAgent);
             var clientMetadata = new ClientMetadata(parsedUserAgent);
 
-            context.Items["ClientMetadata"] = clientMetadata;
+            context.SetItem<ClientMetadata>(clientMetadata);
         }
 
         await next(context);
