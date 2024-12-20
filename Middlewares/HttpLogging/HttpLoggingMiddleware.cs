@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 using Turg.App.HttpContextExtensions.StorageItemExtensions;
 using Turg.App.Middlewares.HttpLogging.Services;
@@ -32,9 +33,11 @@ internal class HttpLoggingMiddleware : IMiddleware
         // var logger = context.RequestServices.GetRequiredService<ILogger<Startup>>();
         // var userActivityService = context.RequestServices.GetRequiredService<UserActivityService>();
 
+        var httpActivityFeature = context.Features.Get<IHttpActivityFeature>();
+
         _userActivityService.StartActivity();
 
-        var stopwatch = Stopwatch.StartNew();
+        var startedAt = httpActivityFeature is not null ? httpActivityFeature.Activity.StartTimeUtc : DateTime.UtcNow;
 
         var request = context.Request;
 
@@ -52,11 +55,12 @@ internal class HttpLoggingMiddleware : IMiddleware
         await next(context);
         // post-processing
 
-        stopwatch.Stop();
+        var endedAt = DateTime.UtcNow;
+        var duration = endedAt - startedAt;
 
         _logger.LogInformation("[{Timestamp}] Response: {StatusCode} in {ElapsedMilliseconds} ms",
         DateTime.UtcNow,
         context.Response.StatusCode,
-        stopwatch.ElapsedMilliseconds);
+        duration.TotalMilliseconds);
     }
 }
