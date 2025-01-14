@@ -9,7 +9,20 @@ namespace Turg.App.Controllers.Admin
         public async Task<ViewResult> Index()
         {
             var products = await Product.GetAll();
-            return View("/Views/Admin/Products/Index.cshtml", products);
+
+            ViewData.Model = products;
+
+            var viewResult = new ViewResult()
+            {
+                ViewName = "/Views/Admin/Products/Index.cshtml",
+                ViewData = ViewData,
+            };
+
+            // await viewResult.ExecuteResultAsync(ControllerContext);
+
+            return viewResult;
+
+            // return View("/Views/Admin/Products/Index.cshtml", products);
         }
     }
 }
