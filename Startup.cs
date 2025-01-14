@@ -17,51 +17,38 @@ namespace Turg.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-            Console.WriteLine("::Startup:: Configure");
-            // app.UseRouting();
-            // app.UseMvc();
-
-            // Sales office
             app.Use(async (context, next) =>
             {
-                Console.WriteLine("Sales office");
+                var isSingleTransmissionEnabled = context.Request.Headers["X-Request-Response-Mode"].ToString().Equals("Single-Transmission", StringComparison.OrdinalIgnoreCase);
 
-                bool isDeal = context.Request.Headers["x-deal"] == "yes";
-
-                if (!isDeal)
+                if (!isSingleTransmissionEnabled)
                 {
-                    Console.WriteLine("Sales office - No deal");
-                    context.Response.StatusCode = 401;
+                    await next();
                     return;
                 }
 
+                var originalBody = context.Response.Body;
+
+                using var memoryStream = new MemoryStream();
+                context.Response.Body = memoryStream;
+
+                // Pre-process
                 await next();
-            });
-            
-            // Parts tracking station
-            app.Use(async (context, next) =>
-            {
-                Console.WriteLine("Parts tracking system - Expectations logged (Pre-process)");
+                // Post-process
 
-                await next();
-
-                Console.WriteLine("Parts tracking system - Serial numbers logged (Post-process)");
-            });
-
-            // Chassis-frame station
-            app.Use(async (context, next) =>
-            {
-                await context.Response.WriteAsync("Chasis");
-                Console.WriteLine("Chassis-Frame station - Frame added");
-
-                await next();
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                context.Response.ContentLength = memoryStream.Length;
+                await memoryStream.CopyToAsync(originalBody);
+                context.Response.Body = originalBody;
             });
 
-            // Engine assembly station
             app.Use(async (context, next) =>
             {
-                await context.Response.WriteAsync("+Engine");
-                Console.WriteLine("Engine assembly station - Engine assembled");
+                for (int i = 0; i < 10; i++)
+                {
+                    await context.Response.WriteAsync($"Chunk {i}\n");
+                    await Task.Delay(1000);
+                }
 
                 await next();
             });
