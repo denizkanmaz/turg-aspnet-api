@@ -13,6 +13,10 @@ namespace Turg.App.Controllers
         {
             var products = await Product.GetAll();
             return products;
+
+            // Sends data always in JSON format
+            // return new JsonResult(products);
+            // return Json(Product);
         }
 
         // Returns products by category name.

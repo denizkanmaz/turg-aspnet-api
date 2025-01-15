@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Turg.App
 {
@@ -12,7 +13,11 @@ namespace Turg.App
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine("::Startup:: ConfigureServices");
-            services.AddMvc(MvcOptions => MvcOptions.EnableEndpointRouting = false);
+            services.AddMvc(MvcOptions =>
+            {
+                MvcOptions.EnableEndpointRouting = false;
+                MvcOptions.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
