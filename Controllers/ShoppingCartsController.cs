@@ -6,11 +6,17 @@ namespace Turg.App.Controllers
     [Route("[controller]")]
     public class ShoppingCartsController : Controller
     {
+        public ShoppingCartsController()
+        {
+            Console.WriteLine("ShoppingCartsController::ctor");
+        }
+
         // Returns a shopping cart by id.
         // GET: /shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d
         [HttpGet("GetById")]
         public async Task<ShoppingCart> GetById([FromQuery] string id)
         {
+            Console.WriteLine("ShoppingCartsController::GetById");
             var shoppingCart = await ShoppingCart.GetById(id);
             return shoppingCart;
         }

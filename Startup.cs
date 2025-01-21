@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Turg.App.Filters;
 
 namespace Turg.App
 {
@@ -17,6 +19,12 @@ namespace Turg.App
             {
                 MvcOptions.EnableEndpointRouting = false;
                 MvcOptions.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+
+                MvcOptions.Filters.Add(new MyActionFilter());
+                MvcOptions.Filters.Add(new MyAuthorizationFilter());
+                MvcOptions.Filters.Add(new MyExceptionFilter());
+                MvcOptions.Filters.Add(new MyResourceFilter());
+                MvcOptions.Filters.Add(new MyResultFilter());
             });
         }
 
@@ -26,6 +34,31 @@ namespace Turg.App
             app.UseRouting();
             app.UseStaticFiles();
             app.UseMvc();
+
+            app.UseEndpoints(endpoint =>
+            {
+                endpoint.MapGet("/health", async context =>
+                {
+
+                    var startTime = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+                    var uptime = DateTime.UtcNow - startTime;
+
+                    var uptimeString = $"{uptime.Hours}H {uptime.Minutes}M, {uptime.Seconds}S";
+
+                    var healthStatus = new
+                    {
+                        Status = "Running",
+                        Uptime = uptimeString,
+                        Environment.MachineName,
+                        OS = Environment.OSVersion.Platform.ToString(),
+                        Environment.ProcessId,
+                        Environment.ProcessorCount,
+
+                    };
+
+                    await context.Response.WriteAsJsonAsync(healthStatus);
+                });
+            });
         }
     }
 }
