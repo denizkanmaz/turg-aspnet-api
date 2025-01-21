@@ -15,16 +15,16 @@ namespace Turg.App
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine("::Startup:: ConfigureServices");
+            services.AddScoped<LoggingFilter>();
+
             services.AddMvc(MvcOptions =>
             {
                 MvcOptions.EnableEndpointRouting = false;
                 MvcOptions.OutputFormatters.Add(new XmlSerializerOutputFormatter());
 
-                MvcOptions.Filters.Add(new MyActionFilter());
-                MvcOptions.Filters.Add(new MyAuthorizationFilter());
-                MvcOptions.Filters.Add(new MyExceptionFilter());
-                MvcOptions.Filters.Add(new MyResourceFilter());
-                MvcOptions.Filters.Add(new MyResultFilter());
+                // MvcOptions.Filters.Add(new LoggingFilter());
+                // MvcOptions.Filters.Add<LoggingFilter>(); // Type-Based global filter registration
+                MvcOptions.Filters.AddService<LoggingFilter>(); // Service-Based global filter registration
             });
         }
 
