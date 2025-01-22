@@ -16,6 +16,7 @@ namespace Turg.App
         {
             Console.WriteLine("::Startup:: ConfigureServices");
             services.AddScoped<LoggingFilter>();
+            services.AddScoped<BenchmarkFilter>();
 
             services.AddMvc(MvcOptions =>
             {

@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
+using Turg.App.Filters;
 using Turg.App.Models;
 
 namespace Turg.App.Controllers
 {
     [Route("[controller]")]
+    [ServiceFilter<BenchmarkFilter>]
     public class ProductsController : Controller
     {
         // Returns all products.
         // GET: /products/
         [HttpGet]
+        // [TypeFilter<BenchmarkFilter>]
+        // [ServiceFilter<BenchmarkFilter>]
         public async Task<IEnumerable<Product>> Index()
         {
             var products = await Product.GetAll();
