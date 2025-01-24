@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Turg.App.Filters;
 using Turg.App.Models;
+using Turg.App.Pipelines;
 
 namespace Turg.App.Controllers
 {
+    // [MiddlewareFilter<CustomMiddlewarePipeline>]
+    // public abstract class MyBaseController : Controller
+    // {}
+
     [Route("[controller]")]
     [ServiceFilter<BenchmarkFilter>]
-    public class ProductsController : Controller
+    public class ProductsController : Controller // MyBaseController
     {
         private ILogger<ProductsController> _logger;
         public ProductsController(ILogger<ProductsController> logger)
@@ -35,6 +40,7 @@ namespace Turg.App.Controllers
 
         // Returns products by category name.
         // GET: /products/GetProductsByCategory?category=Outdoors
+        [MiddlewareFilter<CustomMiddlewarePipeline>]
         [HttpGet("GetProductsByCategory")]
         public async Task<IEnumerable<Product>> GetProductsByCategory([FromQuery] string category)
         {
