@@ -8,13 +8,23 @@ namespace Turg.App.Controllers
     [ServiceFilter<BenchmarkFilter>]
     public class ProductsController : Controller
     {
+        private ILogger<ProductsController> _logger;
+        public ProductsController(ILogger<ProductsController> logger)
+        {
+            _logger = logger;
+            
+            _logger.LogInformation("ctor");
+        }
         // Returns all products.
         // GET: /products/
         [HttpGet]
+        [ServiceFilter<CachingFilter>]
         // [TypeFilter<BenchmarkFilter>]
         // [ServiceFilter<BenchmarkFilter>]
         public async Task<IEnumerable<Product>> Index()
         {
+            _logger.LogInformation("index");
+
             var products = await Product.GetAll();
             return products;
 
