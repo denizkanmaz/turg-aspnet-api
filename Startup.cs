@@ -33,12 +33,14 @@ namespace Turg.App
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             Console.WriteLine("::Startup:: Configure");
-            app.UseRouting();
+            
             app.UseStaticFiles();
-            app.UseMvc();
 
-            app.UseEndpoints(endpoint =>
+            app.UseRouting(); // Adds Endpoint Routing Middleware
+            app.UseEndpoints(endpoint => // Adds Endpoint Middleware
             {
+                endpoint.MapControllers();
+
                 endpoint.MapGet("/health", async context =>
                 {
 
