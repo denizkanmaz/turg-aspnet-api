@@ -19,15 +19,18 @@ namespace Turg.App
             services.AddScoped<BenchmarkFilter>();
             services.AddScoped<CachingFilter>();
 
-            services.AddMvc(MvcOptions =>
+            // services.AddMvc(); // Calls AddControllersWithViews() and AddRazorPages()
+            // services.AddRazorPages(); // Registers dependencies for Razor Pages
+            // services.AddControllers(); // Registers dependencies for (API) Controllers
+            services.AddControllersWithViews(mvcOptions =>
             {
-                MvcOptions.EnableEndpointRouting = false;
-                MvcOptions.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                mvcOptions.EnableEndpointRouting = false;
+                mvcOptions.OutputFormatters.Add(new XmlSerializerOutputFormatter());
 
                 // MvcOptions.Filters.Add(new LoggingFilter());
                 // MvcOptions.Filters.Add<LoggingFilter>(); // Type-Based global filter registration
-                MvcOptions.Filters.AddService<LoggingFilter>(); // Service-Based global filter registration
-            });
+                mvcOptions.Filters.AddService<LoggingFilter>(); // Service-Based global filter registration
+            }); // Registers dependencies for Controllers and Views
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
@@ -40,7 +43,6 @@ namespace Turg.App
             app.UseEndpoints(endpoint => // Adds Endpoint Middleware
             {
                 endpoint.MapControllers();
-                endpoint.MapRazorPages();
 
                 endpoint.MapGet("/health", async context =>
                 {
