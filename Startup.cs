@@ -40,6 +40,7 @@ namespace Turg.App
             app.UseEndpoints(endpoint => // Adds Endpoint Middleware
             {
                 endpoint.MapControllers();
+                endpoint.MapRazorPages();
 
                 endpoint.MapGet("/health", async context =>
                 {
