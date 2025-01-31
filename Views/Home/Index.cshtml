@@ -1,26 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-    <title>Turg - Welcome</title>
-
-    <style>
-        #main-container {
-            text-align: center;
-        }
-
-        .logo-top {
-            width: 150px;
-            height: 100px;
-        }
-    </style>
-
-</head>
-
 @{
-    // Razor code block
-    @* Razor code block *@
+    Layout = "_Layout";
+    ViewData["Title"] = "Home";
 
     string GenerateGreetingMessage()
     {
@@ -44,21 +24,6 @@
     }
 }
 
-<body>
-    <div id="main-container">
-        <img class="logo-top" src="/assets/logo-turg.png" alt="Turg" />
-        <h2>We're Turg!</h2>
-        <!-- This will appear on client side browser -->
-        <p>@GenerateGreetingMessage()</p>
-        @* Explicit Razor Expression *@
-        @* <p>@(DateTime.Now.Hour < 12 ? "Good morning" : (DateTime.Now.Hour < 18 ? "Good afternoon" : "Good
-        evening"))</p> *@
-        <p>Turg is your go-to New-Gen Ecommer platform for a seamless shopping experience.</p>
-        <footer>
-            @* Implicit Razor Expression *@
-            <p>Copyright @DateTime.Now.Year</p>
-        </footer>
-    </div>
-</body>
-
-</html>
+<h2>We're Turg!</h2>
+<p>@GenerateGreetingMessage()</p>
+<p>Turg is your go-to New-Gen Ecommer platform for a seamless shopping experience.</p>

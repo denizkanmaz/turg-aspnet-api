@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>@ViewData["Title"] | Turg</title>
+
+    <style>
+        #main-container {
+            text-align: center;
+        }
+
+        .logo-top {
+            width: 150px;
+            height: 100px;
+        }
+    </style>
+
+    @RenderSection("Head", false)
+
+</head>
+
+<body>
+    <div id="main-container">
+        <img class="logo-top" src="/assets/logo-turg.png" alt="Turg" />
+        @RenderBody()
+        <footer>
+            <p>Copyright @DateTime.Now.Year</p>
+        </footer>
+    </div>
+</body>
+
+</html>
