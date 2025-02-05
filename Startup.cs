@@ -24,13 +24,11 @@ namespace Turg.App
             // services.AddControllers(); // Registers dependencies for (API) Controllers
             services.AddControllersWithViews(mvcOptions =>
             {
-                mvcOptions.EnableEndpointRouting = false;
-                mvcOptions.OutputFormatters.Add(new XmlSerializerOutputFormatter());
-
                 // MvcOptions.Filters.Add(new LoggingFilter());
                 // MvcOptions.Filters.Add<LoggingFilter>(); // Type-Based global filter registration
                 mvcOptions.Filters.AddService<LoggingFilter>(); // Service-Based global filter registration
-            }); // Registers dependencies for Controllers and Views
+            }) // Registers dependencies for Controllers and Views
+            .AddXmlSerializerFormatters();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
