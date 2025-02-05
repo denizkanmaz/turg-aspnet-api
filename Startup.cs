@@ -21,7 +21,6 @@ namespace Turg.App
 
             services.AddMvc(MvcOptions =>
             {
-                MvcOptions.EnableEndpointRouting = false;
                 MvcOptions.OutputFormatters.Add(new XmlSerializerOutputFormatter());
 
                 // MvcOptions.Filters.Add(new LoggingFilter());
@@ -33,7 +32,7 @@ namespace Turg.App
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             Console.WriteLine("::Startup:: Configure");
-            
+
             app.UseStaticFiles();
 
             app.UseRouting(); // Adds Endpoint Routing Middleware
