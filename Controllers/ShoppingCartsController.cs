@@ -4,7 +4,7 @@ using Turg.App.Models;
 namespace Turg.App.Controllers
 {
     [Route("[controller]")]
-    public class ShoppingCartsController : Controller
+    public class ShoppingCartsController : ControllerBase
     {
         public ShoppingCartsController()
         {

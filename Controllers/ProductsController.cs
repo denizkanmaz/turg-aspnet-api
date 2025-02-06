@@ -11,7 +11,7 @@ namespace Turg.App.Controllers
 
     [Route("[controller]")]
     [ServiceFilter<BenchmarkFilter>]
-    public class ProductsController : Controller // MyBaseController
+    public class ProductsController : ControllerBase // MyBaseController
     {
         private ILogger<ProductsController> _logger;
         public ProductsController(ILogger<ProductsController> logger)
