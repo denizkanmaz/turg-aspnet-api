@@ -11,13 +11,14 @@ namespace Turg.App.Controllers
 
     [Route("[controller]")]
     [ServiceFilter<BenchmarkFilter>]
+    [ApiController]
     public class ProductsController : ControllerBase // MyBaseController
     {
         private ILogger<ProductsController> _logger;
         public ProductsController(ILogger<ProductsController> logger)
         {
             _logger = logger;
-            
+
             _logger.LogInformation("ctor");
         }
         // Returns all products.
@@ -60,6 +61,11 @@ namespace Turg.App.Controllers
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] Product product)
         {
+            // if (!ModelState.IsValid)
+            // {
+            //     return ValidationProblem(ModelState);
+            // }
+
             var id = await Product.Add(product);
             return new { Result = "OK", Message = "Product added", Id = id };
         }

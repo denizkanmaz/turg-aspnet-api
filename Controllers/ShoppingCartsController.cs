@@ -4,6 +4,7 @@ using Turg.App.Models;
 namespace Turg.App.Controllers
 {
     [Route("[controller]")]
+    [ApiController]
     public class ShoppingCartsController : ControllerBase
     {
         public ShoppingCartsController()
@@ -14,11 +15,17 @@ namespace Turg.App.Controllers
         // Returns a shopping cart by id.
         // GET: /shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d
         [HttpGet("GetById")]
-        public async Task<ShoppingCart> GetById([FromQuery] string id)
+        public async Task<IActionResult> GetById([FromQuery] string id)
         {
             Console.WriteLine("ShoppingCartsController::GetById");
             var shoppingCart = await ShoppingCart.GetById(id);
-            return shoppingCart;
+
+            if (shoppingCart == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(shoppingCart);
         }
 
         // Adds a shopping cart item to a shopping cart.

@@ -22,14 +22,15 @@ namespace Turg.App.Models
             await using var conn = new NpgsqlConnection(Constants.ConnectionString);
             await conn.OpenAsync();
 
-            var shoppingCart = new ShoppingCart();
+            ShoppingCart shoppingCart = null;
 
             await using (var cmd = new NpgsqlCommand($"SELECT * FROM shopping_carts where id = '{id}'", conn))
             {
                 await using NpgsqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-                while (await reader.ReadAsync())
+                if (await reader.ReadAsync())
                 {
+                    shoppingCart = new ShoppingCart();
                     shoppingCart.Id = reader.GetGuid(0).ToString();
                     shoppingCart.Products = new List<Product>();
 
