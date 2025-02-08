@@ -80,7 +80,7 @@ namespace Turg.App.Models
 
             await conn.CloseAsync();
 
-            return products.AsReadOnly();;
+            return products.AsReadOnly(); ;
         }
 
         public static async Task<Guid> Add(Product product)
@@ -107,14 +107,14 @@ namespace Turg.App.Models
             return id;
         }
 
-        public static async Task Update(Product product)
+        public static async Task Update(Product product, Guid? id = null)
         {
             await using var conn = new NpgsqlConnection(Constants.ConnectionString);
             await conn.OpenAsync();
 
             await using (var cmd = new NpgsqlCommand("UPDATE products SET name = @name, category = @category, description = @description, price = @price, currency = @currency WHERE id = @id", conn))
             {
-                cmd.Parameters.AddWithValue("id", product.Id);
+                cmd.Parameters.AddWithValue("id", id ?? product.Id);
                 cmd.Parameters.AddWithValue("name", product.Name);
                 cmd.Parameters.AddWithValue("category", product.Category);
                 cmd.Parameters.AddWithValue("description", product.Description);

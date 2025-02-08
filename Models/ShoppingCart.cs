@@ -62,11 +62,11 @@ namespace Turg.App.Models
             return shoppingCart;
         }
 
-        public static async Task AddProduct(ShoppingCartItem shoppingCartItem)
+        public static async Task AddProduct(ShoppingCartItem shoppingCartItem, Guid? cartId = null)
         {
             var isNewShoppingCart = shoppingCartItem.ShoppingCartId == null;
 
-            var shoppingCartId = shoppingCartItem.ShoppingCartId ?? Guid.NewGuid();
+            var shoppingCartId = cartId ?? shoppingCartItem.ShoppingCartId ?? Guid.NewGuid();
 
             if (isNewShoppingCart)
             {

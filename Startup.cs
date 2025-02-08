@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Turg.App.Filters;
@@ -29,12 +30,26 @@ namespace Turg.App
                 mvcOptions.Filters.AddService<LoggingFilter>(); // Service-Based global filter registration
             }) // Registers dependencies for Controllers and Views
             .AddXmlSerializerFormatters();
+
+            services.AddApiVersioning(options =>
+            {
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+                // options.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
+                // options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
+                // options.ApiVersionReader = ApiVersionReader.Combine(
+                //     new HeaderApiVersionReader("X-Api-Version"),
+                //     new QueryStringApiVersionReader("api-version")
+                // );
+
+                options.DefaultApiVersion = new ApiVersion(1.0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            }).AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             Console.WriteLine("::Startup:: Configure");
-            
+
             app.UseStaticFiles();
 
             app.UseRouting(); // Adds Endpoint Routing Middleware

@@ -1,8 +1,12 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Turg.App.Models;
 
 namespace Turg.App.Controllers
 {
+    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("2.0")]
+    [Route("api/v{v:apiVersion}/[controller]")]
     [Route("[controller]")]
     [ApiController]
     public class ShoppingCartsController : ControllerBase
@@ -12,8 +16,7 @@ namespace Turg.App.Controllers
             Console.WriteLine("ShoppingCartsController::ctor");
         }
 
-        // Returns a shopping cart by id.
-        // GET: /shoppingcarts/GetById?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d
+        [MapToApiVersion("1.0")]
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById([FromQuery] string id)
         {
@@ -28,13 +31,22 @@ namespace Turg.App.Controllers
             return Ok(shoppingCart);
         }
 
-        // Adds a shopping cart item to a shopping cart.
-        // GET: /shoppingcarts/AddProduct
-        // {
-        //     "shoppingCartId": "ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
-        //     "productId": "8b2aedf0-c6a8-4a09-a36a-077055a37133",
-        //     "quantity": 1
-        // }
+        [MapToApiVersion("2.0")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] string id)
+        {
+            Console.WriteLine("ShoppingCartsController::GetById");
+            var shoppingCart = await ShoppingCart.GetById(id);
+
+            if (shoppingCart == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(shoppingCart);
+        }
+
+        [MapToApiVersion("1.0")]
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] ShoppingCartItem shoppingCartItem)
         {
@@ -42,10 +54,24 @@ namespace Turg.App.Controllers
             return new { Result = "OK", Message = "Product added to shopping cart" };
         }
 
-        // Deletes a shopping cart and its items.
-        // GET: /shoppingcarts/Delete?id=ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d
+        [MapToApiVersion("2.0")]
+        [HttpPost("{id}/items")]
+        public async Task<dynamic> CreateItem([FromRoute] Guid id, [FromBody] ShoppingCartItem shoppingCartItem)
+        {
+            await ShoppingCart.AddProduct(shoppingCartItem, id);
+            return new { Result = "OK", Message = "Product added to shopping cart" };
+        }
+
+        [MapToApiVersion("1.0")]
         [HttpGet("Delete")]
         public async void Delete([FromQuery] string id)
+        {
+            await ShoppingCart.Delete(id);
+        }
+
+        [MapToApiVersion("2.0")]
+        [HttpDelete("{id}")]
+        public async void Remove([FromRoute] string id)
         {
             await ShoppingCart.Delete(id);
         }

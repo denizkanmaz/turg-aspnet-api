@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Turg.App.Filters;
 using Turg.App.Models;
@@ -9,6 +10,9 @@ namespace Turg.App.Controllers
     // public abstract class MyBaseController : Controller
     // {}
 
+    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("2.0")]
+    [Route("api/v{v:apiVersion}/[controller]")]
     [Route("[controller]")]
     [ServiceFilter<BenchmarkFilter>]
     [ApiController]
@@ -21,26 +25,36 @@ namespace Turg.App.Controllers
 
             _logger.LogInformation("ctor");
         }
-        // Returns all products.
-        // GET: /products/
+
+        [MapToApiVersion("1.0")]
         [HttpGet]
         [ServiceFilter<CachingFilter>]
-        // [TypeFilter<BenchmarkFilter>]
-        // [ServiceFilter<BenchmarkFilter>]
         public async Task<IEnumerable<Product>> Index()
         {
             _logger.LogInformation("index");
 
             var products = await Product.GetAll();
             return products;
-
-            // Sends data always in JSON format
-            // return new JsonResult(products);
-            // return Json(Product);
         }
 
-        // Returns products by category name.
-        // GET: /products/GetProductsByCategory?category=Outdoors
+        [MapToApiVersion("2.0")]
+        [HttpGet]
+        [ServiceFilter<CachingFilter>]
+        public async Task<IEnumerable<Product>> GetProducts([FromQuery] string category)
+        {
+            _logger.LogInformation("GetProducts");
+
+            if (!String.IsNullOrWhiteSpace(category))
+            {
+                var productsByCategory = await Product.GetByCategory(category);
+                return productsByCategory;
+            }
+
+            var products = await Product.GetAll();
+            return products;
+        }
+
+        [MapToApiVersion("1.0")]
         [MiddlewareFilter<CustomMiddlewarePipeline>]
         [HttpGet("GetProductsByCategory")]
         public async Task<IEnumerable<Product>> GetProductsByCategory([FromQuery] string category)
@@ -49,41 +63,35 @@ namespace Turg.App.Controllers
             return products;
         }
 
-        // Adds a new product.
-        // GET: /products/AddProduct
-        // {
-        //     "name": "A sample product",
-        //     "category": "Sample",
-        //     "description": "A sample product description",
-        //     "price": 100.00,
-        //     "currency": "USD"
-        // }
+        [MapToApiVersion("1.0")]
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] Product product)
         {
-            // if (!ModelState.IsValid)
-            // {
-            //     return ValidationProblem(ModelState);
-            // }
-
             var id = await Product.Add(product);
             return new { Result = "OK", Message = "Product added", Id = id };
         }
 
-        // Updates a product.
-        // GET: /products/UpdateProduct
-        // {
-        //     "id": "8b2aedf0-c6a8-4a09-a36a-077055a37133",
-        //     "name": "Handcrafted Steel Towels (Updated)",
-        //     "category": "Outdoors",
-        //     "description": "Updated description",
-        //     "price": 100.00,
-        //     "currency": "USD"
-        // }
+        [MapToApiVersion("2.0")]
+        [HttpPost()]
+        public async Task<dynamic> Create([FromBody] Product product)
+        {
+            var id = await Product.Add(product);
+            return new { Result = "OK", Message = "Product added", Id = id };
+        }
+
+        [MapToApiVersion("1.0")]
         [HttpGet("UpdateProduct")]
         public async Task<dynamic> UpdateProduct([FromBody] Product product)
         {
             await Product.Update(product);
+            return new { Result = "OK", Message = "Product updated" };
+        }
+
+        [MapToApiVersion("2.0")]
+        [HttpPut("{id}")]
+        public async Task<dynamic> Put([FromRoute]Guid id, [FromBody] Product product)
+        {
+            await Product.Update(product, id);
             return new { Result = "OK", Message = "Product updated" };
         }
     }
