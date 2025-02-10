@@ -6,10 +6,7 @@ namespace Turg.App.Controllers
 {
     [ApiVersion("1.0", Deprecated = true)]
     [ApiVersion("2.0")]
-    [Route("api/v{v:apiVersion}/[controller]")]
-    [Route("[controller]")]
-    [ApiController]
-    public class ShoppingCartsController : ControllerBase
+    public class ShoppingCartsController : BaseApiController
     {
         [MapToApiVersion("1.0")]
         [HttpGet("GetById")]
