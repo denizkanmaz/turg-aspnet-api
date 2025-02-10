@@ -23,7 +23,7 @@ namespace Turg.App
             // services.AddMvc(); // Calls AddControllersWithViews() and AddRazorPages()
             // services.AddRazorPages(); // Registers dependencies for Razor Pages
             // services.AddControllers(); // Registers dependencies for (API) Controllers
-            services.AddControllersWithViews(mvcOptions =>
+            services.AddControllers(mvcOptions =>
             {
                 // MvcOptions.Filters.Add(new LoggingFilter());
                 // MvcOptions.Filters.Add<LoggingFilter>(); // Type-Based global filter registration
@@ -49,8 +49,6 @@ namespace Turg.App
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             Console.WriteLine("::Startup:: Configure");
-
-            app.UseStaticFiles();
 
             app.UseRouting(); // Adds Endpoint Routing Middleware
             app.UseEndpoints(endpoint => // Adds Endpoint Middleware
