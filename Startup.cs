@@ -11,6 +11,8 @@ namespace Turg.App
             services.AddScoped<LoggingFilter>()
             .AddScoped<CachingFilter>();
 
+            services.AddMemoryCache();
+            
             services.AddControllers(mvcOptions =>
             {
                 mvcOptions.Filters.AddService<LoggingFilter>();
