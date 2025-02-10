@@ -2,37 +2,21 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Turg.App.Filters;
 using Turg.App.Models;
-using Turg.App.Pipelines;
 
 namespace Turg.App.Controllers
 {
-    // [MiddlewareFilter<CustomMiddlewarePipeline>]
-    // public abstract class MyBaseController : Controller
-    // {}
-
     [ApiVersion("1.0", Deprecated = true)]
     [ApiVersion("2.0")]
     [Route("api/v{v:apiVersion}/[controller]")]
     [Route("[controller]")]
-    [ServiceFilter<BenchmarkFilter>]
     [ApiController]
-    public class ProductsController : ControllerBase // MyBaseController
+    public class ProductsController : ControllerBase
     {
-        private ILogger<ProductsController> _logger;
-        public ProductsController(ILogger<ProductsController> logger)
-        {
-            _logger = logger;
-
-            _logger.LogInformation("ctor");
-        }
-
         [MapToApiVersion("1.0")]
         [HttpGet]
         [ServiceFilter<CachingFilter>]
         public async Task<IEnumerable<Product>> Index()
         {
-            _logger.LogInformation("index");
-
             var products = await Product.GetAll();
             return products;
         }
@@ -42,8 +26,6 @@ namespace Turg.App.Controllers
         [ServiceFilter<CachingFilter>]
         public async Task<IEnumerable<Product>> GetProducts([FromQuery] string category)
         {
-            _logger.LogInformation("GetProducts");
-
             if (!String.IsNullOrWhiteSpace(category))
             {
                 var productsByCategory = await Product.GetByCategory(category);
@@ -55,7 +37,6 @@ namespace Turg.App.Controllers
         }
 
         [MapToApiVersion("1.0")]
-        [MiddlewareFilter<CustomMiddlewarePipeline>]
         [HttpGet("GetProductsByCategory")]
         public async Task<IEnumerable<Product>> GetProductsByCategory([FromQuery] string category)
         {

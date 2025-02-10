@@ -11,16 +11,10 @@ namespace Turg.App.Controllers
     [ApiController]
     public class ShoppingCartsController : ControllerBase
     {
-        public ShoppingCartsController()
-        {
-            Console.WriteLine("ShoppingCartsController::ctor");
-        }
-
         [MapToApiVersion("1.0")]
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById([FromQuery] string id)
         {
-            Console.WriteLine("ShoppingCartsController::GetById");
             var shoppingCart = await ShoppingCart.GetById(id);
 
             if (shoppingCart == null)
@@ -35,7 +29,6 @@ namespace Turg.App.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
-            Console.WriteLine("ShoppingCartsController::GetById");
             var shoppingCart = await ShoppingCart.GetById(id);
 
             if (shoppingCart == null)
