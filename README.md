@@ -24,3 +24,13 @@ dotnet run
 
 "Turg" means "market" in Estonian language 🇪🇪
 
+## Todo
+
+1. Migration Plan (Controller-Based APIs to Minimal APIs)
+    * Hosting model
+    * Custom endpoint: /health
+    * MVC
+        * Controllers
+        * Output Formats: JSON, XML
+        * MVC Filters
+        * Api Versioning
