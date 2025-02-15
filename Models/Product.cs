@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Npgsql;
 
 namespace Turg.App.Models
