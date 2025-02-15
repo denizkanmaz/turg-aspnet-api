@@ -1,5 +1,10 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using System;
+using System.Diagnostics;
+using Asp.Versioning;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Turg.App.Filters;
 
 namespace Turg.App
 {
@@ -7,11 +12,55 @@ namespace Turg.App
     {
         public static void Main(string[] args)
         {
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(
-                    webBuilder => { webBuilder.UseStartup<Startup>(); })
-             .Build()
-             .Run();
+            var builder = WebApplication.CreateBuilder(args);
+
+            #region ConfigureServices
+            builder.Services.AddScoped<LoggingFilter>()
+                                .AddScoped<CachingFilter>();
+
+            builder.Services.AddMemoryCache();
+
+            builder.Services.AddControllers(mvcOptions =>
+            {
+                mvcOptions.Filters.AddService<LoggingFilter>();
+            })
+            .AddXmlSerializerFormatters();
+
+            builder.Services.AddApiVersioning(options =>
+            {
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+                options.DefaultApiVersion = new ApiVersion(1.0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            }).AddMvc();
+            #endregion
+
+            var app = builder.Build();
+
+            #region Configure
+            app.MapGet("/health", async context =>
+                 {
+                     var startTime = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+                     var uptime = DateTime.UtcNow - startTime;
+
+                     var uptimeString = $"{uptime.Hours}H {uptime.Minutes}M, {uptime.Seconds}S";
+
+                     var healthStatus = new
+                     {
+                         Status = "Running",
+                         Uptime = uptimeString,
+                         Environment.MachineName,
+                         OS = Environment.OSVersion.Platform.ToString(),
+                         Environment.ProcessId,
+                         Environment.ProcessorCount,
+                     };
+
+                     await context.Response.WriteAsJsonAsync(healthStatus);
+                 });
+
+                 app.MapControllers();
+            #endregion
+
+            app.Run();
         }
     }
 }
