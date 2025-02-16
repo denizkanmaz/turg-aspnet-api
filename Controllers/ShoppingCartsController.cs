@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Turg.App.Models;
 

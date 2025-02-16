@@ -1,13 +1,9 @@
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 
 namespace Turg.App.Filters;
 
@@ -72,7 +68,7 @@ internal class CachingFilter : IResourceFilter
             stopwatch.Stop();
 
             _logger.LogInformation($"Generated cache key: {hashedKey} - {stopwatch.ElapsedMilliseconds}ms");
-            
+
             return hashedKey;
         }
     }

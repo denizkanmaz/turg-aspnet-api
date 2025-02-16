@@ -1,66 +1,51 @@
-using System;
 using System.Diagnostics;
-using Asp.Versioning;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Turg.App.Filters;
 
-namespace Turg.App
+var builder = WebApplication.CreateBuilder(args);
+
+#region ConfigureServices
+builder.Services.AddScoped<LoggingFilter>()
+                    .AddScoped<CachingFilter>();
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddControllers(mvcOptions =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    mvcOptions.Filters.AddService<LoggingFilter>();
+})
+.AddXmlSerializerFormatters();
 
-            #region ConfigureServices
-            builder.Services.AddScoped<LoggingFilter>()
-                                .AddScoped<CachingFilter>();
+builder.Services.AddApiVersioning(options =>
+{
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    options.DefaultApiVersion = new ApiVersion(1.0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+}).AddMvc();
+#endregion
 
-            builder.Services.AddMemoryCache();
+var app = builder.Build();
 
-            builder.Services.AddControllers(mvcOptions =>
-            {
-                mvcOptions.Filters.AddService<LoggingFilter>();
-            })
-            .AddXmlSerializerFormatters();
+#region Configure
+app.MapGet("/health", async context =>
+     {
+         var startTime = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+         var uptime = DateTime.UtcNow - startTime;
 
-            builder.Services.AddApiVersioning(options =>
-            {
-                options.ApiVersionReader = new UrlSegmentApiVersionReader();
-                options.DefaultApiVersion = new ApiVersion(1.0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-            }).AddMvc();
-            #endregion
+         var uptimeString = $"{uptime.Hours}H {uptime.Minutes}M, {uptime.Seconds}S";
 
-            var app = builder.Build();
+         var healthStatus = new
+         {
+             Status = "Running",
+             Uptime = uptimeString,
+             Environment.MachineName,
+             OS = Environment.OSVersion.Platform.ToString(),
+             Environment.ProcessId,
+             Environment.ProcessorCount,
+         };
 
-            #region Configure
-            app.MapGet("/health", async context =>
-                 {
-                     var startTime = Process.GetCurrentProcess().StartTime.ToUniversalTime();
-                     var uptime = DateTime.UtcNow - startTime;
+         await context.Response.WriteAsJsonAsync(healthStatus);
+     });
 
-                     var uptimeString = $"{uptime.Hours}H {uptime.Minutes}M, {uptime.Seconds}S";
+app.MapControllers();
+#endregion
 
-                     var healthStatus = new
-                     {
-                         Status = "Running",
-                         Uptime = uptimeString,
-                         Environment.MachineName,
-                         OS = Environment.OSVersion.Platform.ToString(),
-                         Environment.ProcessId,
-                         Environment.ProcessorCount,
-                     };
-
-                     await context.Response.WriteAsJsonAsync(healthStatus);
-                 });
-
-                 app.MapControllers();
-            #endregion
-
-            app.Run();
-        }
-    }
-}
+app.Run();

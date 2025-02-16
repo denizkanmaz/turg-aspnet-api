@@ -1,6 +1,4 @@
-using System;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 
 namespace Turg.App.Filters;
 
@@ -12,7 +10,7 @@ internal class LoggingFilter : IResourceFilter
         _logger = logger;
         _logger.LogInformation("ctor");
     }
-    
+
     public void OnResourceExecuting(ResourceExecutingContext context)
     {
         var requestId = context.HttpContext.TraceIdentifier;

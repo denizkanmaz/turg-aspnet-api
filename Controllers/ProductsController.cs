@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using Turg.App.Filters;
 using Turg.App.Models;
 
 namespace Turg.App.Controllers
@@ -70,7 +65,7 @@ namespace Turg.App.Controllers
 
         [MapToApiVersion("2.0")]
         [HttpPut("{id}")]
-        public async Task<dynamic> Put([FromRoute]Guid id, [FromBody] Product product)
+        public async Task<dynamic> Put([FromRoute] Guid id, [FromBody] Product product)
         {
             await Product.Update(product, id);
             return new { Result = "OK", Message = "Product updated" };
