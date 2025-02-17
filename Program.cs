@@ -46,7 +46,12 @@ app.MapGet("/health", async context =>
          await context.Response.WriteAsJsonAsync(healthStatus);
      });
 
-app.MapGet("/api/v3.0-dev/products", async (string category) =>
+
+var apiV3Group = app.MapGroup("/api/v3.0-dev");
+
+var productsGroup = apiV3Group.MapGroup("/products");
+
+productsGroup.MapGet("/", async (string category) =>
 {
     if (!String.IsNullOrWhiteSpace(category))
     {
@@ -58,19 +63,20 @@ app.MapGet("/api/v3.0-dev/products", async (string category) =>
     return products;
 });
 
-app.MapPost("/api/v3.0-dev/products", async (Product product) =>
+productsGroup.MapPost("/", async (Product product) =>
 {
     var id = await Product.Add(product);
     return new { Result = "OK", Message = "Product added", Id = id };
 });
 
-app.MapPut("/api/v3.0-dev/products/{id}", async (Guid id, Product product) =>
+productsGroup.MapPut("/{id}", async (Guid id, Product product) =>
 {
     await Product.Update(product, id);
     return new { Result = "OK", Message = "Product updated" };
 });
 
-app.MapGet("/api/v3.0-dev/shoppingcarts/{id}", async (string id) =>
+var shoppingCartGroup = apiV3Group.MapGroup("/shoppingcarts");
+shoppingCartGroup.MapGet("/{id}", async (string id) =>
 {
     var shoppingCart = await ShoppingCart.GetById(id);
 
@@ -83,13 +89,13 @@ app.MapGet("/api/v3.0-dev/shoppingcarts/{id}", async (string id) =>
     return shoppingCart;
 });
 
-app.MapPost("/api/v3.0-dev/shoppingcarts/{id}/items", async (Guid id, ShoppingCartItem shoppingCartItem) =>
+shoppingCartGroup.MapPost("/{id}/items", async (Guid id, ShoppingCartItem shoppingCartItem) =>
 {
     await ShoppingCart.AddProduct(shoppingCartItem, id);
     return new { Result = "OK", Message = "Product added to shopping cart" };
 });
 
-app.MapDelete("/api/v3.0-dev/shoppingcarts/{id}", async (string id) =>
+shoppingCartGroup.MapDelete("/{id}", async (string id) =>
 {
     await ShoppingCart.Delete(id);
 });
