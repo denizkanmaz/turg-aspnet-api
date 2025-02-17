@@ -604,6 +604,177 @@
 			]
 		},
 		{
+			"name": "v3",
+			"item": [
+				{
+					"name": "/shoppingcarts",
+					"item": [
+						{
+							"name": "/shoppingcarts/{id}",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host_v3}}/shoppingcarts/ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
+									"host": [
+										"{{host_v3}}"
+									],
+									"path": [
+										"shoppingcarts",
+										"ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/shoppingcarts/{id}/items",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"shoppingCartId\": \"ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d\",\n    \"productId\": \"8b2aedf0-c6a8-4a09-a36a-077055a37133\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_v3}}/shoppingcarts/ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d/items",
+									"host": [
+										"{{host_v3}}"
+									],
+									"path": [
+										"shoppingcarts",
+										"ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
+										"items"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/shoppingcarts/{id}",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"shoppingCartId\": \"ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d\",\n    \"productId\": \"8b2aedf0-c6a8-4a09-a36a-077055a37133\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_v3}}/shoppingcarts/ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d",
+									"host": [
+										"{{host_v3}}"
+									],
+									"path": [
+										"shoppingcarts",
+										"ae8fbf0c-4acf-47c6-a1ca-f429f6b17e2d"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "/products",
+					"item": [
+						{
+							"name": "/products",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{host_v3}}/products?category=Outdoors",
+									"host": [
+										"{{host_v3}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "Outdoors"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Testing Version 3.0-dev\",\n    \"category\": \"Testing\",\n    \"description\": \"A sample product description\",\n    \"price\": 100.00,\n    \"currency\": \"USD\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_v3}}/products",
+									"host": [
+										"{{host_v3}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/products/{id}",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Handcrafted Steel Towels (Updated)\",\n    \"category\": \"Outdoors\",\n    \"description\": \"Updated description\",\n    \"price\": 100.00,\n    \"currency\": \"USD\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host_v3}}/products/b643b161-25d0-4f03-8c50-52570f9226f0",
+									"host": [
+										"{{host_v3}}"
+									],
+									"path": [
+										"products",
+										"b643b161-25d0-4f03-8c50-52570f9226f0"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "health",
 			"request": {
 				"method": "GET",
@@ -657,6 +828,11 @@
 		{
 			"key": "host_v2",
 			"value": "{{host}}/api/v2",
+			"type": "string"
+		},
+		{
+			"key": "host_v3",
+			"value": "{{host}}/api/v3.0-dev",
 			"type": "string"
 		}
 	]
