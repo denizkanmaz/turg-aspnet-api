@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Turg.App.Models;
+using Turg.App.Endpoint;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,59 +46,9 @@ app.MapGet("/health", async context =>
          await context.Response.WriteAsJsonAsync(healthStatus);
      });
 
-
-var apiV3Group = app.MapGroup("/api/v3.0-dev");
-
-var productsGroup = apiV3Group.MapGroup("/products");
-
-productsGroup.MapGet("/", async (string category) =>
-{
-    if (!String.IsNullOrWhiteSpace(category))
-    {
-        var productsByCategory = await Product.GetByCategory(category);
-        return productsByCategory;
-    }
-
-    var products = await Product.GetAll();
-    return products;
-});
-
-productsGroup.MapPost("/", async (Product product) =>
-{
-    var id = await Product.Add(product);
-    return new { Result = "OK", Message = "Product added", Id = id };
-});
-
-productsGroup.MapPut("/{id}", async (Guid id, Product product) =>
-{
-    await Product.Update(product, id);
-    return new { Result = "OK", Message = "Product updated" };
-});
-
-var shoppingCartGroup = apiV3Group.MapGroup("/shoppingcarts");
-shoppingCartGroup.MapGet("/{id}", async (string id) =>
-{
-    var shoppingCart = await ShoppingCart.GetById(id);
-
-    if (shoppingCart == null)
-    {
-        // return NotFound();
-        return null;
-    }
-
-    return shoppingCart;
-});
-
-shoppingCartGroup.MapPost("/{id}/items", async (Guid id, ShoppingCartItem shoppingCartItem) =>
-{
-    await ShoppingCart.AddProduct(shoppingCartItem, id);
-    return new { Result = "OK", Message = "Product added to shopping cart" };
-});
-
-shoppingCartGroup.MapDelete("/{id}", async (string id) =>
-{
-    await ShoppingCart.Delete(id);
-});
+app.MapGroup("/api/v3.0-dev")
+    .MapProductEndpoints()
+    .MapShoppingCartEndpoints();
 
 app.MapControllers();
 #endregion
