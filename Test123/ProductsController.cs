@@ -3,19 +3,20 @@ using Turg.App.Filters;
 using Turg.App.Models;
 using Turg.App.Pipelines;
 
-namespace Turg.App.Controllers
+namespace Turg.App.Test987
 {
-    // [MiddlewareFilter<CustomMiddlewarePipeline>]
-    // public abstract class MyBaseController : Controller
-    // {}
+    // Controller discovery conditions:
+    // 1. Class-naming convention: {ResourceName}Controller (e.g. ProductsController)
+    // 2. Inheriting from ControllerBase
+    // 3. Being decorated with ApiController attribute
 
     [Route("[controller]")]
     [ServiceFilter<BenchmarkFilter>]
-    [ApiController]
-    public class ProductsController : ControllerBase // MyBaseController
+    // [ApiController]
+    public class Products // :  ControllerBase // MyBaseController
     {
-        private ILogger<ProductsController> _logger;
-        public ProductsController(ILogger<ProductsController> logger)
+        private ILogger<Products> _logger;
+        public Products(ILogger<Products> logger)
         {
             _logger = logger;
 
