@@ -1,5 +1,6 @@
 using System.Diagnostics;
-using Turg.App.Endpoint;
+using System.Reflection;
+using Turg.App.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,8 +48,7 @@ app.MapGet("/health", async context =>
      });
 
 app.MapGroup("/api/v3.0-dev")
-    .MapProductEndpoints()
-    .MapShoppingCartEndpoints();
+    .MapEndpoints(Assembly.GetExecutingAssembly());
 
 app.MapControllers();
 #endregion

@@ -1,10 +1,10 @@
 using Turg.App.Models;
 
-namespace Turg.App.Endpoint;
+namespace Turg.App.Endpoints;
 
-internal static class ShoppingCartEndpoints
+internal class ShoppingCartEndpoints : IEndpoints
 {
-    internal static IEndpointRouteBuilder MapShoppingCartEndpoints(this IEndpointRouteBuilder routeBuilder)
+    public void Map(IEndpointRouteBuilder routeBuilder)
     {
         var shoppingCartGroup = routeBuilder.MapGroup("/shoppingcarts");
         shoppingCartGroup.MapGet("/{id}", async (string id) =>
@@ -30,7 +30,5 @@ internal static class ShoppingCartEndpoints
         {
             await ShoppingCart.Delete(id);
         });
-
-        return routeBuilder;
     }
 }

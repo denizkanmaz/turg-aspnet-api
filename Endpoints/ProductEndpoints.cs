@@ -1,10 +1,10 @@
 using Turg.App.Models;
 
-namespace Turg.App.Endpoint;
+namespace Turg.App.Endpoints;
 
-internal static class ProductEndpoints
+internal class ProductEndpoints : IEndpoints
 {
-    internal static IEndpointRouteBuilder MapProductEndpoints(this IEndpointRouteBuilder routeBuilder)
+    public void Map(IEndpointRouteBuilder routeBuilder)
     {
         var productsGroup = routeBuilder.MapGroup("/products");
 
@@ -31,7 +31,5 @@ internal static class ProductEndpoints
             await Product.Update(product, id);
             return new { Result = "OK", Message = "Product updated" };
         });
-
-        return routeBuilder;
     }
 }
