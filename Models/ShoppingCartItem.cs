@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Turg.App.Models
@@ -7,6 +8,7 @@ namespace Turg.App.Models
         [JsonPropertyName("id")]
         public string Id { get; set; }
 
+        [Required]
         [JsonPropertyName("productId")]
         public string ProductId { get; set; }
 

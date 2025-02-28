@@ -15,7 +15,7 @@ internal class ShoppingCartEndpoints : IEndpoints
         {
             await ShoppingCart.AddProduct(shoppingCartItem, id);
             return new { Result = "OK", Message = "Product added to shopping cart" };
-        });
+        }).AddEndpointFilter<ValidationEndpointFilter<ShoppingCartItem>>();
 
         shoppingCartGroup.MapDelete("/{id}", async (string id) =>
         {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Turg.App.Models;
 
 namespace Turg.App.Endpoints;
@@ -20,16 +21,16 @@ internal class ProductEndpoints : IEndpoints
             return products;
         }).AddEndpointFilter<CachingEndpointFilter>();
 
-        productsGroup.MapPost("/", async (Product product) =>
+        productsGroup.MapPost("/", async ValueTask<Results<ValidationProblem, Ok<object>>> (HttpContext context, Product product) =>
         {
             var id = await Product.Add(product);
-            return new { Result = "OK", Message = "Product added", Id = id };
-        });
+            return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added", Id = id });
+        }).AddEndpointFilter<ValidationEndpointFilter<Product>>();
 
         productsGroup.MapPut("/{id}", async (Guid id, Product product) =>
         {
             await Product.Update(product, id);
             return new { Result = "OK", Message = "Product updated" };
-        });
-    }  
+        }).AddEndpointFilter<ValidationEndpointFilter<Product>>();;
+    }
 }

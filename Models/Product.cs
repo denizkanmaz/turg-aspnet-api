@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Npgsql;
 
@@ -21,6 +22,7 @@ namespace Turg.App.Models
         public double Price { get; set; }
 
         [JsonPropertyName("currency")]
+        [Length(3, 3, ErrorMessage = "Currency must follow ISO-*** format.")]
         public string Currency { get; set; }
 
         public static async Task<IEnumerable<Product>> GetAll()
