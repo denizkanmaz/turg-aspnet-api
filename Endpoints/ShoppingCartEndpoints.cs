@@ -8,7 +8,10 @@ internal class ShoppingCartEndpoints : IEndpoints
 {
     public void Map(IEndpointRouteBuilder routeBuilder)
     {
-        var shoppingCartGroup = routeBuilder.MapGroup("/shoppingcarts");
+        var shoppingCartGroup = routeBuilder
+        .MapGroup("/shoppingcarts")
+        .MapToApiVersion(3, 0);
+
         shoppingCartGroup.MapGet("/{id}", GetById);
 
         shoppingCartGroup.MapPost("/{id}/items", async (Guid id, ShoppingCartItem shoppingCartItem) =>

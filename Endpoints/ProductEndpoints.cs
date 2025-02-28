@@ -7,7 +7,9 @@ internal class ProductEndpoints : IEndpoints
 {
     public void Map(IEndpointRouteBuilder routeBuilder)
     {
-        var productsGroup = routeBuilder.MapGroup("/products");
+        var productsGroup = routeBuilder
+            .MapGroup("/products")
+            .MapToApiVersion(3, 0);
 
         productsGroup.MapGet("/", async (string category) =>
         {
@@ -20,6 +22,13 @@ internal class ProductEndpoints : IEndpoints
             var products = await Product.GetAll();
             return products;
         }).AddEndpointFilter<CachingEndpointFilter>();
+        // .MapToApiVersion(3, 0);
+
+        // productsGroup.MapGet("/", async (string category) =>
+        // {
+        //     return "This is going to be version 4";
+        // }).AddEndpointFilter<CachingEndpointFilter>()
+        // .MapToApiVersion(4, 0);
 
         productsGroup.MapPost("/", async ValueTask<Results<ValidationProblem, Ok<object>>> (HttpContext context, Product product) =>
         {
@@ -31,6 +40,6 @@ internal class ProductEndpoints : IEndpoints
         {
             await Product.Update(product, id);
             return new { Result = "OK", Message = "Product updated" };
-        }).AddEndpointFilter<ValidationEndpointFilter<Product>>();;
+        }).AddEndpointFilter<ValidationEndpointFilter<Product>>();
     }
 }

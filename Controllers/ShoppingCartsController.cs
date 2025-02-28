@@ -4,7 +4,7 @@ using Turg.App.Models;
 namespace Turg.App.Controllers
 {
     [ApiVersion("1.0", Deprecated = true)]
-    [ApiVersion("2.0")]
+    [ApiVersion("2.0", Deprecated = true)]
     public class ShoppingCartsController : BaseApiController
     {
         [MapToApiVersion("1.0")]

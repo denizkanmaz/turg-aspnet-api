@@ -19,6 +19,7 @@ builder.Services.AddApiVersioning(options =>
     options.ApiVersionReader = new UrlSegmentApiVersionReader();
     options.DefaultApiVersion = new ApiVersion(1.0);
     options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
 }).AddMvc();
 #endregion
 
@@ -47,7 +48,13 @@ app.MapGet("/health", async context =>
          await context.Response.WriteAsJsonAsync(healthStatus);
      });
 
-app.MapGroup("/api/v3.0-dev")
+var versionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(3, 0))
+    // .HasApiVersion(new ApiVersion(4, 0))
+    .Build();
+
+app.MapGroup("/api/v{version:apiVersion}")
+    .WithApiVersionSet(versionSet)
     .MapEndpoints(Assembly.GetExecutingAssembly());
 
 app.MapControllers();
