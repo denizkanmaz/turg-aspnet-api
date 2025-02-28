@@ -832,7 +832,7 @@
 		},
 		{
 			"key": "host_v3",
-			"value": "{{host}}/api/v3.0-dev",
+			"value": "{{host}}/api/v3",
 			"type": "string"
 		}
 	]
