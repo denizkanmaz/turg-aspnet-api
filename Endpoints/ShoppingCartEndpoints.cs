@@ -13,20 +13,11 @@ internal class ShoppingCartEndpoints : IEndpoints
         .MapToApiVersion(3, 0);
 
         shoppingCartGroup.MapGet("/{id}", GetById);
-
-        shoppingCartGroup.MapPost("/{id}/items", async (Guid id, ShoppingCartItem shoppingCartItem) =>
-        {
-            await ShoppingCart.AddProduct(shoppingCartItem, id);
-            return new { Result = "OK", Message = "Product added to shopping cart" };
-        }).AddEndpointFilter<ValidationEndpointFilter<ShoppingCartItem>>();
-
-        shoppingCartGroup.MapDelete("/{id}", async (string id) =>
-        {
-            await ShoppingCart.Delete(id);
-        });
+        shoppingCartGroup.MapPost("/{id}/items", AddItems).WithValidation<ShoppingCartItem>();
+        shoppingCartGroup.MapDelete("/{id}", async (string id) => await ShoppingCart.Delete(id));
     }
 
-    public static async Task<Results<ProblemHttpResult, Ok<ShoppingCart>>> GetById(HttpContext context, string id)
+    private static async Task<Results<ProblemHttpResult, Ok<ShoppingCart>>> GetById(HttpContext context, string id)
     {
         var shoppingCart = await ShoppingCart.GetById(id);
 
@@ -44,5 +35,11 @@ internal class ShoppingCartEndpoints : IEndpoints
         }
 
         return TypedResults.Ok(shoppingCart);
+    }
+
+    private static async Task<Ok<object>> AddItems(Guid id, ShoppingCartItem shoppingCartItem)
+    {
+        await ShoppingCart.AddProduct(shoppingCartItem, id);
+        return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added to shopping cart" });
     }
 }

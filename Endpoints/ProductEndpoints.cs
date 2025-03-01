@@ -11,35 +11,29 @@ internal class ProductEndpoints : IEndpoints
             .MapGroup("/products")
             .MapToApiVersion(3, 0);
 
-        productsGroup.MapGet("/", async (string category) =>
-        {
-            if (!String.IsNullOrWhiteSpace(category))
-            {
-                var productsByCategory = await Product.GetByCategory(category);
-                return productsByCategory;
-            }
+        productsGroup.MapGet("/", Get).WithCaching();
+        productsGroup.MapPost("/", Post).WithValidation<Product>();
+        productsGroup.MapPut("/{id}", Put).WithValidation<Product>();
+    }
 
-            var products = await Product.GetAll();
-            return products;
-        }).AddEndpointFilter<CachingEndpointFilter>();
-        // .MapToApiVersion(3, 0);
+    private static async Task<Ok<IEnumerable<Product>>> Get(string category)
+    {
+        var products = !string.IsNullOrWhiteSpace(category)
+            ? await Product.GetByCategory(category)
+            : await Product.GetAll();
 
-        // productsGroup.MapGet("/", async (string category) =>
-        // {
-        //     return "This is going to be version 4";
-        // }).AddEndpointFilter<CachingEndpointFilter>()
-        // .MapToApiVersion(4, 0);
+        return TypedResults.Ok(products);
+    }
 
-        productsGroup.MapPost("/", async ValueTask<Results<ValidationProblem, Ok<object>>> (HttpContext context, Product product) =>
-        {
-            var id = await Product.Add(product);
-            return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added", Id = id });
-        }).AddEndpointFilter<ValidationEndpointFilter<Product>>();
+    private static async Task<Results<ValidationProblem, Ok<object>>> Post(HttpContext context, Product product)
+    {
+        var id = await Product.Add(product);
+        return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added", Id = id });
+    }
 
-        productsGroup.MapPut("/{id}", async (Guid id, Product product) =>
-        {
-            await Product.Update(product, id);
-            return new { Result = "OK", Message = "Product updated" };
-        }).AddEndpointFilter<ValidationEndpointFilter<Product>>();
+    private static async Task<Ok<object>> Put(Guid id, Product product)
+    {
+        await Product.Update(product, id);
+        return TypedResults.Ok<object>(new { Result = "OK", Message = "Product updated" });
     }
 }

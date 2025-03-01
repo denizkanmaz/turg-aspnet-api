@@ -16,15 +16,6 @@ internal class ValidationEndpointFilter<T> : IEndpointFilter
 
         if (!isValid)
         {
-            // return TypedResults.BadRequest<object>(new
-            // {
-            //     Result = "Error",
-            //     Message = "Validation Failed",
-            //     Errors = validationResults
-            // });
-
-            // return TypedResults.Problem
-
             var validationErrors = validationResults
                 .GroupBy(result => result.MemberNames.FirstOrDefault() ?? "Other")
                 .ToDictionary(group => group.Key, group => group.Select(error => error.ErrorMessage).ToArray());
@@ -35,5 +26,13 @@ internal class ValidationEndpointFilter<T> : IEndpointFilter
         }
 
         return await next(context);
+    }
+}
+
+internal static class ValidationEndpointFilterExtensions
+{
+    public static RouteHandlerBuilder WithValidation<T>(this RouteHandlerBuilder builder)
+    {
+        return builder.AddEndpointFilter<ValidationEndpointFilter<T>>();
     }
 }

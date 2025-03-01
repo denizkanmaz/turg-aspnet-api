@@ -1,25 +1,16 @@
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Caching.Memory;
-using Turg.App.Models;
 
 namespace Turg.App.Filters;
 
-internal class CachingEndpointFilter : IEndpointFilter
+internal class CachingEndpointFilter(IMemoryCache memoryCache) : IEndpointFilter
 {
-    private readonly IMemoryCache _memoryCache;
-    public CachingEndpointFilter(IMemoryCache memoryCache)
-    {
-        _memoryCache = memoryCache;
-        Console.WriteLine("CachingEndpointFilter.ctor");
-    }
-    
     public async ValueTask<object> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        Console.WriteLine("CachingEndpointFilter.InvokeAsync");
         var cacheKey = GenerateCacheKey(context.HttpContext.Request);
 
-        if (_memoryCache.TryGetValue(cacheKey, out IEnumerable<Product> cachedResult))
+        if (memoryCache.TryGetValue(cacheKey, out IResult cachedResult))
         {
             context.HttpContext.Response.Headers.Append("X-Cache-Hit", "yes");
             return cachedResult;
@@ -29,7 +20,11 @@ internal class CachingEndpointFilter : IEndpointFilter
         var result = await next(context);
         // Post-process
 
-        _memoryCache.Set(cacheKey, result, new TimeSpan(0, 0, 30));
+        if (result is IResult httpResult)
+        {
+            memoryCache.Set(cacheKey, httpResult, new TimeSpan(0, 0, 30));
+        }
+
         return result;
     }
 
@@ -53,6 +48,12 @@ internal class CachingEndpointFilter : IEndpointFilter
             return hashedKey;
         }
     }
+}
 
-
+internal static class CachingEndpointFilterExtensions
+{
+    internal static RouteHandlerBuilder WithCaching(this RouteHandlerBuilder builder)
+    {
+        return builder.AddEndpointFilter<CachingEndpointFilter>();
+    }
 }
