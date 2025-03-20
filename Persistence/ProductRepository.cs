@@ -1,7 +1,8 @@
 using Npgsql;
+using Turg.App.Infrastructure;
 using Turg.App.Models;
 
-namespace Turg.App.Infrastructure;
+namespace Turg.App.Persistence;
 
 // A service should:
 // * encapsulate its logic

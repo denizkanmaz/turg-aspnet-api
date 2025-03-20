@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Turg.App.Infrastructure;
 using Turg.App.Models;
+using Turg.App.Persistence;
 
 namespace Turg.App.Controllers
 {

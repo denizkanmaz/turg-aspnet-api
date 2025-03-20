@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Turg.App.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Turg.App.Infrastructure;
+using Turg.App.Persistence;
 
 namespace Turg.App.Endpoints;
 
