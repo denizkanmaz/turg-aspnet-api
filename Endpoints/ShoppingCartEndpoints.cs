@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Turg.App.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Turg.App.Infrastructure;
 
 namespace Turg.App.Endpoints;
 
@@ -14,12 +15,14 @@ internal class ShoppingCartEndpoints : IEndpoints
 
         shoppingCartGroup.MapGet("/{id}", GetById);
         shoppingCartGroup.MapPost("/{id}/items", AddItems).WithValidation<ShoppingCartItem>();
-        shoppingCartGroup.MapDelete("/{id}", async (string id) => await ShoppingCart.Delete(id));
+        shoppingCartGroup.MapDelete("/{id}", async (string id) => await new ShoppingCartRepository().Delete(id));
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<ShoppingCart>>> GetById(HttpContext context, string id)
     {
-        var shoppingCart = await ShoppingCart.GetById(id);
+        var shoppingCartRepository = new ShoppingCartRepository();
+
+        var shoppingCart = await shoppingCartRepository.GetById(id);
 
         if (shoppingCart == null)
         {
@@ -39,7 +42,9 @@ internal class ShoppingCartEndpoints : IEndpoints
 
     private static async Task<Ok<object>> AddItems(Guid id, ShoppingCartItem shoppingCartItem)
     {
-        await ShoppingCart.AddProduct(shoppingCartItem, id);
+        var shoppingCartRepository = new ShoppingCartRepository();
+
+        await shoppingCartRepository.AddProduct(shoppingCartItem, id);
         return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added to shopping cart" });
     }
 }

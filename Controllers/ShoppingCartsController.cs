@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Turg.App.Infrastructure;
 using Turg.App.Models;
 
 namespace Turg.App.Controllers
@@ -7,11 +8,17 @@ namespace Turg.App.Controllers
     [ApiVersion("2.0", Deprecated = true)]
     public class ShoppingCartsController : BaseApiController
     {
+        private readonly ShoppingCartRepository _shoppingCartRepository;
+        public ShoppingCartsController()
+        {
+            _shoppingCartRepository = new ShoppingCartRepository();
+        }
+
         [MapToApiVersion("1.0")]
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById([FromQuery] string id)
         {
-            var shoppingCart = await ShoppingCart.GetById(id);
+            var shoppingCart = await _shoppingCartRepository.GetById(id);
 
             if (shoppingCart == null)
             {
@@ -25,7 +32,7 @@ namespace Turg.App.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
-            var shoppingCart = await ShoppingCart.GetById(id);
+            var shoppingCart = await _shoppingCartRepository.GetById(id);
 
             if (shoppingCart == null)
             {
@@ -39,7 +46,7 @@ namespace Turg.App.Controllers
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] ShoppingCartItem shoppingCartItem)
         {
-            await ShoppingCart.AddProduct(shoppingCartItem);
+            await _shoppingCartRepository.AddProduct(shoppingCartItem);
             return new { Result = "OK", Message = "Product added to shopping cart" };
         }
 
@@ -47,7 +54,7 @@ namespace Turg.App.Controllers
         [HttpPost("{id}/items")]
         public async Task<dynamic> CreateItem([FromRoute] Guid id, [FromBody] ShoppingCartItem shoppingCartItem)
         {
-            await ShoppingCart.AddProduct(shoppingCartItem, id);
+            await _shoppingCartRepository.AddProduct(shoppingCartItem, id);
             return new { Result = "OK", Message = "Product added to shopping cart" };
         }
 
@@ -55,14 +62,14 @@ namespace Turg.App.Controllers
         [HttpGet("Delete")]
         public async void Delete([FromQuery] string id)
         {
-            await ShoppingCart.Delete(id);
+            await _shoppingCartRepository.Delete(id);
         }
 
         [MapToApiVersion("2.0")]
         [HttpDelete("{id}")]
         public async void Remove([FromRoute] string id)
         {
-            await ShoppingCart.Delete(id);
+            await _shoppingCartRepository.Delete(id);
         }
     }
 }
