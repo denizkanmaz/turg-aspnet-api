@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Turg.App.Infrastructure;
 using Turg.App.Models;
 
 namespace Turg.App.Endpoints;
@@ -18,22 +19,26 @@ internal class ProductEndpoints : IEndpoints
 
     private static async Task<Ok<IEnumerable<Product>>> Get(string category)
     {
-        var products = !string.IsNullOrWhiteSpace(category)
-            ? await Product.GetByCategory(category)
-            : await Product.GetAll();
+        var productRepository = new ProductRepository();
+
+        var products = await productRepository.Get(category);
 
         return TypedResults.Ok(products);
     }
 
     private static async Task<Results<ValidationProblem, Ok<object>>> Post(HttpContext context, Product product)
     {
-        var id = await Product.Add(product);
+        var productRepository = new ProductRepository();
+
+        var id = await productRepository.Insert(product);
         return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added", Id = id });
     }
 
     private static async Task<Ok<object>> Put(Guid id, Product product)
     {
-        await Product.Update(product, id);
+        var productRepository = new ProductRepository();
+
+        await productRepository.Update(product, id);
         return TypedResults.Ok<object>(new { Result = "OK", Message = "Product updated" });
     }
 }
