@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Reflection;
 using Turg.App.Endpoints;
+using Turg.App.Infrastructure;
 using Turg.App.Middleware;
+using Turg.App.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +23,16 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 }).AddMvc();
+
+builder.Services.AddSingleton<SqlCommandExecutor>();
+builder.Services.AddSingleton<SqlConnectionFactory>();
+builder.Services.AddSingleton<ProductRepository>();
+builder.Services.AddSingleton<ShoppingCartRepository>();
 #endregion
 
 var app = builder.Build();
+
+// var productRepository = app.Services.GetRequiredService<ProductRepository>();
 
 #region Configure
 app.UseMiddleware<LoggingMiddleware>();
