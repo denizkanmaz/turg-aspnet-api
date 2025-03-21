@@ -9,9 +9,9 @@ namespace Turg.App.Controllers
     public class ShoppingCartsController : BaseApiController
     {
         private readonly ShoppingCartRepository _shoppingCartRepository;
-        public ShoppingCartsController()
+        public ShoppingCartsController(IServiceProvider services)
         {
-            _shoppingCartRepository = new ShoppingCartRepository();
+            _shoppingCartRepository = services.GetRequiredService<ShoppingCartRepository>();
         }
 
         [MapToApiVersion("1.0")]

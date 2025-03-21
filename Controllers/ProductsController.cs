@@ -10,9 +10,10 @@ namespace Turg.App.Controllers
     {
         private readonly ProductRepository _productRepository;
 
-        public ProductsController()
+        public ProductsController(IServiceProvider services)
         {
-            _productRepository = new ProductRepository();
+            Console.WriteLine("ProductsController:ctor");
+            _productRepository = services.GetRequiredService<ProductRepository>();
         }
 
         [MapToApiVersion("1.0")]

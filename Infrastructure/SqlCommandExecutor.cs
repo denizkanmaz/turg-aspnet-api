@@ -6,9 +6,10 @@ internal class SqlCommandExecutor
 {
     private readonly SqlConnectionFactory _connectionFactory;
 
-    public SqlCommandExecutor()
+    public SqlCommandExecutor(IServiceProvider services)
     {
-        _connectionFactory = new SqlConnectionFactory();
+        Console.WriteLine("SqlCommandExecutor:ctor");
+        _connectionFactory = services.GetRequiredService<SqlConnectionFactory>();
     }
 
     // Higher Order Function (HOF)

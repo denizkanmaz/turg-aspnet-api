@@ -8,9 +8,9 @@ internal class ShoppingCartRepository
 {
     private readonly SqlCommandExecutor _sqlCommandExecutor;
 
-    public ShoppingCartRepository()
+    public ShoppingCartRepository(IServiceProvider services)
     {
-        _sqlCommandExecutor = new SqlCommandExecutor();
+        _sqlCommandExecutor = services.GetRequiredService<SqlCommandExecutor>();
     }
 
     public async Task<ShoppingCart> GetById(string id)

@@ -15,9 +15,10 @@ internal class ProductRepository
 {
     private readonly SqlCommandExecutor _sqlCommandExecutor;
 
-    public ProductRepository()
+    public ProductRepository(IServiceProvider services)
     {
-        _sqlCommandExecutor = new SqlCommandExecutor();
+        Console.WriteLine("ProductRepository:ctor");
+        _sqlCommandExecutor = services.GetRequiredService<SqlCommandExecutor>();
     }
 
     public async Task<IEnumerable<Product>> Get(string category = null)

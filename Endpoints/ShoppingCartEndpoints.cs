@@ -15,12 +15,12 @@ internal class ShoppingCartEndpoints : IEndpoints
 
         shoppingCartGroup.MapGet("/{id}", GetById);
         shoppingCartGroup.MapPost("/{id}/items", AddItems).WithValidation<ShoppingCartItem>();
-        shoppingCartGroup.MapDelete("/{id}", async (string id) => await new ShoppingCartRepository().Delete(id));
+        shoppingCartGroup.MapDelete("/{id}", async (string id) => await new ShoppingCartRepository(null).Delete(id));
     }
 
     private static async Task<Results<ProblemHttpResult, Ok<ShoppingCart>>> GetById(HttpContext context, string id)
     {
-        var shoppingCartRepository = new ShoppingCartRepository();
+        var shoppingCartRepository = new ShoppingCartRepository(null);
 
         var shoppingCart = await shoppingCartRepository.GetById(id);
 
@@ -42,7 +42,7 @@ internal class ShoppingCartEndpoints : IEndpoints
 
     private static async Task<Ok<object>> AddItems(Guid id, ShoppingCartItem shoppingCartItem)
     {
-        var shoppingCartRepository = new ShoppingCartRepository();
+        var shoppingCartRepository = new ShoppingCartRepository(null);
 
         await shoppingCartRepository.AddProduct(shoppingCartItem, id);
         return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added to shopping cart" });

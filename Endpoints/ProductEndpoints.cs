@@ -19,7 +19,7 @@ internal class ProductEndpoints : IEndpoints
 
     private static async Task<Ok<IEnumerable<Product>>> Get(string category)
     {
-        var productRepository = new ProductRepository();
+        var productRepository = new ProductRepository(null);
 
         var products = await productRepository.Get(category);
 
@@ -28,7 +28,7 @@ internal class ProductEndpoints : IEndpoints
 
     private static async Task<Results<ValidationProblem, Ok<object>>> Post(HttpContext context, Product product)
     {
-        var productRepository = new ProductRepository();
+        var productRepository = new ProductRepository(null);
 
         var id = await productRepository.Insert(product);
         return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added", Id = id });
@@ -36,7 +36,7 @@ internal class ProductEndpoints : IEndpoints
 
     private static async Task<Ok<object>> Put(Guid id, Product product)
     {
-        var productRepository = new ProductRepository();
+        var productRepository = new ProductRepository(null);
 
         await productRepository.Update(product, id);
         return TypedResults.Ok<object>(new { Result = "OK", Message = "Product updated" });
