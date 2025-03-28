@@ -6,19 +6,13 @@ namespace Turg.App.Controllers
 {
     [ApiVersion("1.0", Deprecated = true)]
     [ApiVersion("2.0", Deprecated = true)]
-    public class ShoppingCartsController : BaseApiController
+    public class ShoppingCartsController(ShoppingCartRepository shoppingCartRepository) : BaseApiController
     {
-        private readonly ShoppingCartRepository _shoppingCartRepository;
-        public ShoppingCartsController(IServiceProvider services)
-        {
-            _shoppingCartRepository = services.GetRequiredService<ShoppingCartRepository>();
-        }
-
         [MapToApiVersion("1.0")]
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById([FromQuery] string id)
         {
-            var shoppingCart = await _shoppingCartRepository.GetById(id);
+            var shoppingCart = await shoppingCartRepository.GetById(id);
 
             if (shoppingCart == null)
             {
@@ -32,7 +26,7 @@ namespace Turg.App.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
-            var shoppingCart = await _shoppingCartRepository.GetById(id);
+            var shoppingCart = await shoppingCartRepository.GetById(id);
 
             if (shoppingCart == null)
             {
@@ -46,7 +40,7 @@ namespace Turg.App.Controllers
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] ShoppingCartItem shoppingCartItem)
         {
-            await _shoppingCartRepository.AddProduct(shoppingCartItem);
+            await shoppingCartRepository.AddProduct(shoppingCartItem);
             return new { Result = "OK", Message = "Product added to shopping cart" };
         }
 
@@ -54,7 +48,7 @@ namespace Turg.App.Controllers
         [HttpPost("{id}/items")]
         public async Task<dynamic> CreateItem([FromRoute] Guid id, [FromBody] ShoppingCartItem shoppingCartItem)
         {
-            await _shoppingCartRepository.AddProduct(shoppingCartItem, id);
+            await shoppingCartRepository.AddProduct(shoppingCartItem, id);
             return new { Result = "OK", Message = "Product added to shopping cart" };
         }
 
@@ -62,14 +56,14 @@ namespace Turg.App.Controllers
         [HttpGet("Delete")]
         public async void Delete([FromQuery] string id)
         {
-            await _shoppingCartRepository.Delete(id);
+            await shoppingCartRepository.Delete(id);
         }
 
         [MapToApiVersion("2.0")]
         [HttpDelete("{id}")]
         public async void Remove([FromRoute] string id)
         {
-            await _shoppingCartRepository.Delete(id);
+            await shoppingCartRepository.Delete(id);
         }
     }
 }

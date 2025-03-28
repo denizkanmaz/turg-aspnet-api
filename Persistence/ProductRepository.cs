@@ -8,17 +8,16 @@ namespace Turg.App.Persistence;
 // * encapsulate its logic
 // * be reusable
 // * follow SRP of SOLID
-// * EDP (soon)
+// * EDP
 // * DI of SOLID (soon)
 // * OCP of SOLID (soon)
-internal class ProductRepository
+public class ProductRepository
 {
     private readonly SqlCommandExecutor _sqlCommandExecutor;
 
-    public ProductRepository(IServiceProvider services)
+    public ProductRepository(SqlCommandExecutor sqlCommandExecutor)
     {
-        Console.WriteLine("ProductRepository:ctor");
-        _sqlCommandExecutor = services.GetRequiredService<SqlCommandExecutor>();
+        _sqlCommandExecutor = sqlCommandExecutor;
     }
 
     public async Task<IEnumerable<Product>> Get(string category = null)

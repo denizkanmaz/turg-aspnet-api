@@ -4,13 +4,13 @@ using Turg.App.Models;
 
 namespace Turg.App.Persistence;
 
-internal class ShoppingCartRepository
+public class ShoppingCartRepository
 {
     private readonly SqlCommandExecutor _sqlCommandExecutor;
 
-    public ShoppingCartRepository(IServiceProvider services)
+    public ShoppingCartRepository(SqlCommandExecutor sqlCommandExecutor)
     {
-        _sqlCommandExecutor = services.GetRequiredService<SqlCommandExecutor>();
+        _sqlCommandExecutor = sqlCommandExecutor;
     }
 
     public async Task<ShoppingCart> GetById(string id)

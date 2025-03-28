@@ -6,31 +6,27 @@ namespace Turg.App.Controllers
 {
     [ApiVersion("1.0", Deprecated = true)]
     [ApiVersion("2.0", Deprecated = true)]
-    public class ProductsController : BaseApiController
+    public class ProductsController(ProductRepository productRepository) : BaseApiController
     {
-        private readonly ProductRepository _productRepository;
-
-        public ProductsController(IServiceProvider services)
-        {
-            Console.WriteLine("ProductsController:ctor");
-            _productRepository = services.GetRequiredService<ProductRepository>();
-        }
+        // [FromServices]
+        // public ProductRepository ProductRepository { get; set; }
 
         [MapToApiVersion("1.0")]
         [HttpGet]
         [ServiceFilter<CachingFilter>]
         public async Task<IEnumerable<Product>> Index()
         {
-            var products = await _productRepository.Get();
+            var products = await productRepository.Get();
             return products;
         }
 
         [MapToApiVersion("2.0")]
         [HttpGet]
         [ServiceFilter<CachingFilter>]
-        public async Task<IEnumerable<Product>> GetProducts([FromQuery] string category)
+        public async Task<IEnumerable<Product>> GetProducts([FromServices]ILogger<ProductsController> logger, [FromQuery] string category)
         {
-            var products = await _productRepository.Get(category);
+            logger.LogInformation("ProductsController.GetProducts");
+            var products = await productRepository.Get(category);
             return products;
         }
 
@@ -38,7 +34,7 @@ namespace Turg.App.Controllers
         [HttpGet("GetProductsByCategory")]
         public async Task<IEnumerable<Product>> GetProductsByCategory([FromQuery] string category)
         {
-            var products = await _productRepository.Get(category);
+            var products = await productRepository.Get(category);
             return products;
         }
 
@@ -46,7 +42,7 @@ namespace Turg.App.Controllers
         [HttpGet("AddProduct")]
         public async Task<dynamic> AddProduct([FromBody] Product product)
         {
-            var id = await _productRepository.Insert(product);
+            var id = await productRepository.Insert(product);
             return new { Result = "OK", Message = "Product added", Id = id };
         }
 
@@ -54,7 +50,7 @@ namespace Turg.App.Controllers
         [HttpPost()]
         public async Task<dynamic> Create([FromBody] Product product)
         {
-            var id = await _productRepository.Insert(product);
+            var id = await productRepository.Insert(product);
             return new { Result = "OK", Message = "Product added", Id = id };
         }
 
@@ -62,7 +58,7 @@ namespace Turg.App.Controllers
         [HttpGet("UpdateProduct")]
         public async Task<dynamic> UpdateProduct([FromBody] Product product)
         {
-            await _productRepository.Update(product);
+            await productRepository.Update(product);
             return new { Result = "OK", Message = "Product updated" };
         }
 
@@ -70,7 +66,7 @@ namespace Turg.App.Controllers
         [HttpPut("{id}")]
         public async Task<dynamic> Put([FromRoute] Guid id, [FromBody] Product product)
         {
-            await _productRepository.Update(product, id);
+            await productRepository.Update(product, id);
             return new { Result = "OK", Message = "Product updated" };
         }
     }

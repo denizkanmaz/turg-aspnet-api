@@ -2,14 +2,13 @@ using Npgsql;
 
 namespace Turg.App.Infrastructure;
 
-internal class SqlCommandExecutor
+public class SqlCommandExecutor
 {
     private readonly SqlConnectionFactory _connectionFactory;
 
-    public SqlCommandExecutor(IServiceProvider services)
+    public SqlCommandExecutor(SqlConnectionFactory connectionFactory)
     {
-        Console.WriteLine("SqlCommandExecutor:ctor");
-        _connectionFactory = services.GetRequiredService<SqlConnectionFactory>();
+        _connectionFactory = connectionFactory;
     }
 
     // Higher Order Function (HOF)

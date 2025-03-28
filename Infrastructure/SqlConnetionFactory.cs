@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace Turg.App.Infrastructure;
 
-internal class SqlConnectionFactory
+public class SqlConnectionFactory
 {
     public SqlConnectionFactory()
     {
