@@ -24,6 +24,7 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
 }).AddMvc();
 
+builder.Services.Configure<SqlConnectionOptions>(builder.Configuration.GetSection("SqlConnection"));
 builder.Services.AddSingleton<SqlCommandExecutor>();
 builder.Services.AddSingleton<SqlConnectionFactory>();
 builder.Services.AddSingleton<ProductRepository>();
