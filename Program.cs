@@ -25,10 +25,22 @@ builder.Services.AddApiVersioning(options =>
 }).AddMvc();
 
 builder.Services.Configure<SqlConnectionOptions>(builder.Configuration.GetSection("SqlConnection"));
-builder.Services.AddSingleton<SqlCommandExecutor>();
-builder.Services.AddSingleton<SqlConnectionFactory>();
-builder.Services.AddSingleton<ProductRepository>();
-builder.Services.AddSingleton<ShoppingCartRepository>();
+builder.Services.AddSingleton<ISqlCommandExecutor, NpgsqlCommandExecutor>();
+builder.Services.AddSingleton<ISqlConnectionFactory, NpgsqlConnectionFactory>();
+
+var useMock = builder.Configuration.GetValue<bool>("UseMockRepository");
+
+if (useMock)
+{
+    builder.Services.AddSingleton<IProductRepository, ProductRepositoryMock>();
+    builder.Services.AddSingleton<IShoppingCartRepository, ShoppingCartRepositoryMock>();
+}
+else
+{
+    builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+    builder.Services.AddSingleton<IShoppingCartRepository, ShoppingCartRepository>();
+}
+
 #endregion
 
 var app = builder.Build();

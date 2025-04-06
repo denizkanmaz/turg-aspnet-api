@@ -4,11 +4,11 @@ using Turg.App.Models;
 
 namespace Turg.App.Persistence;
 
-public class ShoppingCartRepository
+public class ShoppingCartRepository : IShoppingCartRepository
 {
-    private readonly SqlCommandExecutor _sqlCommandExecutor;
+    private readonly ISqlCommandExecutor _sqlCommandExecutor;
 
-    public ShoppingCartRepository(SqlCommandExecutor sqlCommandExecutor)
+    public ShoppingCartRepository(ISqlCommandExecutor sqlCommandExecutor)
     {
         _sqlCommandExecutor = sqlCommandExecutor;
     }

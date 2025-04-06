@@ -1,23 +1,24 @@
+using System.Data.Common;
 using Npgsql;
 
 namespace Turg.App.Infrastructure;
 
-public class SqlCommandExecutor
+public class NpgsqlCommandExecutor : ISqlCommandExecutor
 {
-    private readonly SqlConnectionFactory _connectionFactory;
+    private readonly ISqlConnectionFactory _connectionFactory;
 
-    public SqlCommandExecutor(SqlConnectionFactory connectionFactory)
+    public NpgsqlCommandExecutor(ISqlConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }
 
     // Higher Order Function (HOF)
-    internal async Task<T> ExecuteReaderAsync<T>(string commandText, Func<NpgsqlDataReader, Task<T>> readerFunc, params NpgsqlParameter[] parameters)
+    public async Task<T> ExecuteReaderAsync<T>(string commandText, Func<DbDataReader, Task<T>> readerFunc, params DbParameter[] parameters)
     {
         await using var conn = _connectionFactory.CreateConnection();
         await using var cmd = new NpgsqlCommand
         {
-            Connection = conn,
+            Connection = conn as NpgsqlConnection,
             CommandText = commandText,
         };
 
@@ -38,12 +39,12 @@ public class SqlCommandExecutor
         return result;
     }
 
-    internal async Task ExecuteNonQueryAsync(string commandText, params NpgsqlParameter[] parameters)
+    public async Task ExecuteNonQueryAsync(string commandText, params DbParameter[] parameters)
     {
         await using var conn = _connectionFactory.CreateConnection();
         await using var cmd = new NpgsqlCommand
         {
-            Connection = conn,
+            Connection = conn as NpgsqlConnection,
             CommandText = commandText,
         };
 

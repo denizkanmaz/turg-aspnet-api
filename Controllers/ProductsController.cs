@@ -6,7 +6,7 @@ namespace Turg.App.Controllers
 {
     [ApiVersion("1.0", Deprecated = true)]
     [ApiVersion("2.0", Deprecated = true)]
-    public class ProductsController(ProductRepository productRepository) : BaseApiController
+    public class ProductsController(IProductRepository productRepository) : BaseApiController
     {
         // [FromServices]
         // public ProductRepository ProductRepository { get; set; }

@@ -9,13 +9,13 @@ namespace Turg.App.Persistence;
 // * be reusable
 // * follow SRP of SOLID
 // * EDP
-// * DI of SOLID (soon)
-// * OCP of SOLID (soon)
-public class ProductRepository
+// * DI of SOLID
+// * OCP of SOLID
+public class ProductRepository : IProductRepository
 {
-    private readonly SqlCommandExecutor _sqlCommandExecutor;
+    private readonly ISqlCommandExecutor _sqlCommandExecutor;
 
-    public ProductRepository(SqlCommandExecutor sqlCommandExecutor)
+    public ProductRepository(ISqlCommandExecutor sqlCommandExecutor)
     {
         _sqlCommandExecutor = sqlCommandExecutor;
     }
