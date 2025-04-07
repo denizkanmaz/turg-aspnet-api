@@ -1,85 +1,29 @@
-using System.Diagnostics;
-using System.Reflection;
-using Turg.App.Endpoints;
-using Turg.App.Infrastructure;
-using Turg.App.Middleware;
-using Turg.App.Persistence;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MyGreeter;
 
-var builder = WebApplication.CreateBuilder(args);
+Console.WriteLine("Hi");
 
-#region ConfigureServices
-builder.Services.AddScoped<CachingFilter>();
-builder.Services.AddScoped<LoggingMiddleware>();
+var services = new ServiceCollection();
+services.AddSingleton<IGreeter, Greeter>();
 
-builder.Services.AddMemoryCache();
+var serviceProvider = services.BuildServiceProvider();
 
-builder.Services.AddControllers()
-.AddXmlSerializerFormatters();
+Console.WriteLine("Press any key to continue or 'q' to exit!");
 
-builder.Services.AddApiVersioning(options =>
+char key = Console.ReadKey().KeyChar;
+
+while (key != 'q')
 {
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    options.DefaultApiVersion = new ApiVersion(1.0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-}).AddMvc();
+    using var scope = serviceProvider.CreateScope();
 
-builder.Services.Configure<SqlConnectionOptions>(builder.Configuration.GetSection("SqlConnection"));
-builder.Services.AddSingleton<ISqlCommandExecutor, NpgsqlCommandExecutor>();
-builder.Services.AddSingleton<ISqlConnectionFactory, NpgsqlConnectionFactory>();
+    var greeter = scope.ServiceProvider.GetService<IGreeter>();
+    var greeter2 = scope.ServiceProvider.GetService<IGreeter>();
 
-var useMock = builder.Configuration.GetValue<bool>("UseMockRepository");
+    var message = greeter.Greet();
 
-if (useMock)
-{
-    builder.Services.AddSingleton<IProductRepository, ProductRepositoryMock>();
-    builder.Services.AddSingleton<IShoppingCartRepository, ShoppingCartRepositoryMock>();
-}
-else
-{
-    builder.Services.AddSingleton<IProductRepository, ProductRepository>();
-    builder.Services.AddSingleton<IShoppingCartRepository, ShoppingCartRepository>();
+    Console.WriteLine(message);
+
+    key = Console.ReadKey().KeyChar;
 }
 
-#endregion
-
-var app = builder.Build();
-
-// var productRepository = app.Services.GetRequiredService<ProductRepository>();
-
-#region Configure
-app.UseMiddleware<LoggingMiddleware>();
-
-app.MapGet("/health", async context =>
-     {
-         var startTime = Process.GetCurrentProcess().StartTime.ToUniversalTime();
-         var uptime = DateTime.UtcNow - startTime;
-
-         var uptimeString = $"{uptime.Hours}H {uptime.Minutes}M, {uptime.Seconds}S";
-
-         var healthStatus = new
-         {
-             Status = "Running",
-             Uptime = uptimeString,
-             Environment.MachineName,
-             OS = Environment.OSVersion.Platform.ToString(),
-             Environment.ProcessId,
-             Environment.ProcessorCount,
-         };
-
-         await context.Response.WriteAsJsonAsync(healthStatus);
-     });
-
-var versionSet = app.NewApiVersionSet()
-    .HasApiVersion(new ApiVersion(3, 0))
-    // .HasApiVersion(new ApiVersion(4, 0))
-    .Build();
-
-app.MapGroup("/api/v{version:apiVersion}")
-    .WithApiVersionSet(versionSet)
-    .MapEndpoints(Assembly.GetExecutingAssembly());
-
-app.MapControllers();
-#endregion
-
-app.Run();
+serviceProvider.Dispose();
