@@ -7,8 +7,7 @@ namespace Turg.App.Filters;
 
 internal class CachingFilter(IMemoryCache memoryCache) : IResourceFilter
 {
-    private readonly TimeSpan _ttl = new TimeSpan(0, 0, 30);
-
+    private static readonly TimeSpan DefaultTTL = new TimeSpan(0, 0, 30);
 
     public void OnResourceExecuting(ResourceExecutingContext context)
     {
@@ -30,6 +29,6 @@ internal class CachingFilter(IMemoryCache memoryCache) : IResourceFilter
 
         var cacheKey = CacheKeyUtils.GenerateCacheKey(context.HttpContext.Request);
 
-        memoryCache.Set(cacheKey, context.Result, _ttl);
+        memoryCache.Set(cacheKey, context.Result, DefaultTTL);
     }
 }

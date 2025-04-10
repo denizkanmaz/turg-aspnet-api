@@ -8,8 +8,8 @@ using Turg.App.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 #region ConfigureServices
-builder.Services.AddScoped<CachingFilter>();
-builder.Services.AddScoped<LoggingMiddleware>();
+builder.Services.AddSingleton<CachingFilter>();
+builder.Services.AddSingleton<LoggingMiddleware>();
 
 builder.Services.AddMemoryCache();
 
