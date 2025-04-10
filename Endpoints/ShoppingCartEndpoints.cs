@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Turg.App.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Turg.App.Persistence;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Turg.App.Endpoints;
 
@@ -15,13 +16,11 @@ internal class ShoppingCartEndpoints : IEndpoints
 
         shoppingCartGroup.MapGet("/{id}", GetById);
         shoppingCartGroup.MapPost("/{id}/items", AddItems).WithValidation<ShoppingCartItem>();
-        shoppingCartGroup.MapDelete("/{id}", async (string id) => await new ShoppingCartRepository(null).Delete(id));
+        shoppingCartGroup.MapDelete("/{id}", async ([FromServices]IShoppingCartRepository shoppingCartRepository, string id) => await shoppingCartRepository.Delete(id));
     }
 
-    private static async Task<Results<ProblemHttpResult, Ok<ShoppingCart>>> GetById(HttpContext context, string id)
+    private static async Task<Results<ProblemHttpResult, Ok<ShoppingCart>>> GetById([FromServices]IShoppingCartRepository shoppingCartRepository, HttpContext context, string id)
     {
-        var shoppingCartRepository = new ShoppingCartRepository(null);
-
         var shoppingCart = await shoppingCartRepository.GetById(id);
 
         if (shoppingCart == null)
@@ -40,10 +39,8 @@ internal class ShoppingCartEndpoints : IEndpoints
         return TypedResults.Ok(shoppingCart);
     }
 
-    private static async Task<Ok<object>> AddItems(Guid id, ShoppingCartItem shoppingCartItem)
+    private static async Task<Ok<object>> AddItems([FromServices]IShoppingCartRepository shoppingCartRepository, Guid id, ShoppingCartItem shoppingCartItem)
     {
-        var shoppingCartRepository = new ShoppingCartRepository(null);
-
         await shoppingCartRepository.AddProduct(shoppingCartItem, id);
         return TypedResults.Ok<object>(new { Result = "OK", Message = "Product added to shopping cart" });
     }

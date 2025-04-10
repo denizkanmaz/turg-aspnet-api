@@ -41,6 +41,8 @@ else
     builder.Services.AddSingleton<IShoppingCartRepository, ShoppingCartRepository>();
 }
 
+builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+
 #endregion
 
 var app = builder.Build();
@@ -77,7 +79,7 @@ var versionSet = app.NewApiVersionSet()
 
 app.MapGroup("/api/v{version:apiVersion}")
     .WithApiVersionSet(versionSet)
-    .MapEndpoints(Assembly.GetExecutingAssembly());
+    .MapEndpoints(app.Services);
 
 app.MapControllers();
 #endregion
