@@ -4,18 +4,10 @@ using Npgsql;
 
 namespace Turg.App.Infrastructure;
 
-public class NpgsqlConnectionFactory : ISqlConnectionFactory
+public class NpgsqlConnectionFactory(IOptions<SqlConnectionOptions> options) : ISqlConnectionFactory
 {
-    private readonly SqlConnectionOptions _options;
-
-    public NpgsqlConnectionFactory(IOptions<SqlConnectionOptions> options)
-    {
-        _options = options.Value;
-        Console.WriteLine("NpgsqlConnectionFactory:ctor");
-    }
-
     public DbConnection CreateConnection()
     {
-        return new NpgsqlConnection(_options.ConnectionString);
+        return new NpgsqlConnection(options.Value.ConnectionString);
     }
 }

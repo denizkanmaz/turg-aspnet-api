@@ -4,22 +4,8 @@ using Turg.App.Models;
 
 namespace Turg.App.Persistence;
 
-// A service should:
-// * encapsulate its logic
-// * be reusable
-// * follow SRP of SOLID
-// * EDP
-// * DI of SOLID
-// * OCP of SOLID
-public class ProductRepository : IProductRepository
+public class ProductRepository(ISqlCommandExecutor sqlCommandExecutor) : IProductRepository
 {
-    private readonly ISqlCommandExecutor _sqlCommandExecutor;
-
-    public ProductRepository(ISqlCommandExecutor sqlCommandExecutor)
-    {
-        _sqlCommandExecutor = sqlCommandExecutor;
-    }
-
     public async Task<IEnumerable<Product>> Get(string category = null)
     {
         var commandText = "SELECT * FROM products";
@@ -31,7 +17,7 @@ public class ProductRepository : IProductRepository
             parameters.Add(new NpgsqlParameter("category", category));
         }
 
-        var products = await _sqlCommandExecutor.ExecuteReaderAsync(commandText, async reader =>
+        var products = await sqlCommandExecutor.ExecuteReaderAsync(commandText, async reader =>
         {
             var products = new List<Product>();
 
@@ -59,7 +45,7 @@ public class ProductRepository : IProductRepository
         var id = Guid.NewGuid();
         var commandText = "INSERT INTO products (id, name, category, description, price, currency) VALUES (@id, @name, @category, @description, @price, @currency)";
 
-        await _sqlCommandExecutor.ExecuteNonQueryAsync(commandText,
+        await sqlCommandExecutor.ExecuteNonQueryAsync(commandText,
             new NpgsqlParameter("id", id),
             new NpgsqlParameter("name", product.Name),
             new NpgsqlParameter("category", product.Category),
@@ -75,7 +61,7 @@ public class ProductRepository : IProductRepository
     {
         var commandText = "UPDATE products SET name = @name, category = @category, description = @description, price = @price, currency = @currency WHERE id = @id";
 
-        await _sqlCommandExecutor.ExecuteNonQueryAsync(commandText,
+        await sqlCommandExecutor.ExecuteNonQueryAsync(commandText,
             new NpgsqlParameter("id", id ?? product.Id),
             new NpgsqlParameter("name", product.Name),
             new NpgsqlParameter("category", product.Category),

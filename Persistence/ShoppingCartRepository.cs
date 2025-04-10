@@ -4,15 +4,8 @@ using Turg.App.Models;
 
 namespace Turg.App.Persistence;
 
-public class ShoppingCartRepository : IShoppingCartRepository
+public class ShoppingCartRepository(ISqlCommandExecutor sqlCommandExecutor) : IShoppingCartRepository
 {
-    private readonly ISqlCommandExecutor _sqlCommandExecutor;
-
-    public ShoppingCartRepository(ISqlCommandExecutor sqlCommandExecutor)
-    {
-        _sqlCommandExecutor = sqlCommandExecutor;
-    }
-
     public async Task<ShoppingCart> GetById(string id)
     {
         var commandText = @"
@@ -22,7 +15,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
         LEFT OUTER JOIN products p ON sci.product_id = p.id
         WHERE sc.id = @id";
 
-        var shoppingCart = await _sqlCommandExecutor.ExecuteReaderAsync(commandText, async reader =>
+        var shoppingCart = await sqlCommandExecutor.ExecuteReaderAsync(commandText, async reader =>
         {
             ShoppingCart shoppingCart = null;
 
@@ -64,10 +57,10 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
         if (isNewShoppingCart)
         {
-            await _sqlCommandExecutor.ExecuteNonQueryAsync("INSERT INTO shopping_carts (id) VALUES (@id)", new NpgsqlParameter("id", shoppingCartId));
+            await sqlCommandExecutor.ExecuteNonQueryAsync("INSERT INTO shopping_carts (id) VALUES (@id)", new NpgsqlParameter("id", shoppingCartId));
         }
 
-        await _sqlCommandExecutor.ExecuteNonQueryAsync("INSERT INTO shopping_cart_items (shopping_cart_id, product_id, quantity) VALUES (@shoppingCartId, @productId, 1)",
+        await sqlCommandExecutor.ExecuteNonQueryAsync("INSERT INTO shopping_cart_items (shopping_cart_id, product_id, quantity) VALUES (@shoppingCartId, @productId, 1)",
 
         new NpgsqlParameter("shoppingCartId", shoppingCartId),
         new NpgsqlParameter("productId", new Guid(shoppingCartItem.ProductId)));
@@ -75,7 +68,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task Delete(string shoppingCartId)
     {
-        await _sqlCommandExecutor.ExecuteNonQueryAsync("DELETE FROM shopping_cart_items WHERE shopping_cart_id = @shoppingCartId; DELETE FROM shopping_carts WHERE id = @shoppingCartId",
+        await sqlCommandExecutor.ExecuteNonQueryAsync("DELETE FROM shopping_cart_items WHERE shopping_cart_id = @shoppingCartId; DELETE FROM shopping_carts WHERE id = @shoppingCartId",
         new NpgsqlParameter("shoppingCartId", new Guid(shoppingCartId)));
     }
 }

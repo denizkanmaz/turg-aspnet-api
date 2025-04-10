@@ -3,19 +3,12 @@ using Npgsql;
 
 namespace Turg.App.Infrastructure;
 
-public class NpgsqlCommandExecutor : ISqlCommandExecutor
+public class NpgsqlCommandExecutor(ISqlConnectionFactory connectionFactory) : ISqlCommandExecutor
 {
-    private readonly ISqlConnectionFactory _connectionFactory;
-
-    public NpgsqlCommandExecutor(ISqlConnectionFactory connectionFactory)
-    {
-        _connectionFactory = connectionFactory;
-    }
-
     // Higher Order Function (HOF)
     public async Task<T> ExecuteReaderAsync<T>(string commandText, Func<DbDataReader, Task<T>> readerFunc, params DbParameter[] parameters)
     {
-        await using var conn = _connectionFactory.CreateConnection();
+        await using var conn = connectionFactory.CreateConnection();
         await using var cmd = new NpgsqlCommand
         {
             Connection = conn as NpgsqlConnection,
@@ -41,7 +34,7 @@ public class NpgsqlCommandExecutor : ISqlCommandExecutor
 
     public async Task ExecuteNonQueryAsync(string commandText, params DbParameter[] parameters)
     {
-        await using var conn = _connectionFactory.CreateConnection();
+        await using var conn = connectionFactory.CreateConnection();
         await using var cmd = new NpgsqlCommand
         {
             Connection = conn as NpgsqlConnection,
